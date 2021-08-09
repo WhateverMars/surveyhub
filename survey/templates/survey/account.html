@@ -1,0 +1,30 @@
+{% extends "survey/layout.html" %}
+
+{% block head %}
+    Account
+{% endblock %}
+
+{% block body %}
+    <h1>Admin only</h1>
+    <p>Log in to set questions</p>
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    
+    <form class="centering admin" action="/account" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">Log In</button>
+    </form>
+    <p></p>
+    <form class="centering admin" action="/register">
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+    <p></p>
+{% endblock %}

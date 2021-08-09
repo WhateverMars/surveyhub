@@ -1,0 +1,16 @@
+{% extends "survey/layout.html" %}
+
+{% block head %}
+    datadelete
+{% endblock %}
+
+{% block body %}
+    <h1>DELETE DATA?</h1>
+    <p>Once results are deleted they cannot be recoved.</p>
+
+
+        <form class="centering" action="/cleardata" method="post">
+            <button class="btn btn-danger" type="submit">CONFIRM DELETE</button>
+        </form>
+
+{% endblock %}

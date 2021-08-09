@@ -1,0 +1,88 @@
+@media only screen and (max-width:1200px)
+{
+    .nav{
+        padding:10px;
+    }
+
+    .nav-item{
+        vertical-align: middle;
+    }
+
+    button{
+        margin-left:0%;
+    }
+}
+
+@media only screen and (max-width:1023px)
+{
+    button{
+        margin-left:0%;
+    }
+
+    .divides{
+    width:80%;
+    display: list-item;
+    padding: 40px;
+    margin:auto;
+    font-size: 120%;
+    }
+
+    .survey{
+    margin-left:4%;
+    margin-right:4%;
+    text-align:center;
+    text-transform: none;
+    padding: 0;
+    }
+
+}
+
+@media only screen and (max-width:767px)
+{
+    body{
+        overflow-x: hidden;
+    }
+
+    button{
+        margin-left:0%;
+    }
+
+    .divides{
+        display: flex;
+    }
+
+    .nav{
+        padding:0px;
+    }
+
+    .nav-item{
+        padding:0px;
+    }
+
+    h1{
+        margin:auto;
+    }
+    .subhead{
+        padding:5%;
+    }
+}
+
+@media only screen and (max-width:480px)
+{
+    button{
+        margin-left:0%;
+
+    }
+
+    .nav{
+        display:flex;
+    }
+
+    .nav-item{
+        font-size:100%;
+
+    }
+
+
+
+}
