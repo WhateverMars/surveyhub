@@ -15,7 +15,7 @@
     </form>
     
     <form class="survey" action= "/editor" method="post">
-
+        {% csrf_token %}
         {% if questions %}
             <p>This is your survey</p>
             <!--This autofills in old questions if they exist-->

@@ -13,7 +13,7 @@ class Surveyer(models.Model):
 
 
 class Question(models.Model):
-    asker = models.ForeignKey(Surveyer, on_delete=models.CASCADE)
+    asker = models.ForeignKey(User, on_delete=models.CASCADE)
     number = models.IntegerField()
     question = models.CharField(max_length=255)
     type = models.CharField(max_length=64)

@@ -15,7 +15,7 @@
     </form>
     
     <form class="survey" action= "/editor" method="post">
-
+        {% csrf_token %}
         {% if questions %}
             <p>This says there are questions</p>
             

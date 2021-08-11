@@ -164,54 +164,92 @@ def logout_view(request):
 def editor(request):
     if request.method == "POST":
 
-        print('----USER id: ' + str(id))
+        print('----USER id: ')
+        print(request.user.id)
         #record the desired number of questions
-        noquestions = User.objects.get(id)
-        print(noquestions)
-        noquestions = db.execute("SELECT questions From users WHERE id=:id", id=session.get("user_id"))[0]["questions"]
+        #noquestions = User.objects.get(id)
+        print(Surveyer.objects.get(user = request.user.id).questions)
+        #noquestions = db.execute("SELECT questions From users WHERE id=:id", id=session.get("user_id"))[0]["questions"]
 
         #Continue loop while questions exist.
         i=1
-        while request.form.get("q%i"%i):
+        while i-1 < Surveyer.objects.get(user = request.user.id).questions:
 
             #for cases where there is no question to be updated, insert new question entry
-            if not db.execute("SELECT question FROM questions WHERE id=:id AND number=:number", id=session.get("user_id"), number=i):
-                db.execute("INSERT INTO questions (id, number, question) VALUES(:id, :number, :question)", id=session.get("user_id"), number=i, question=request.form.get("q%i"%i))
-
-            #if there are previous questions, overwrite them
+            #if not db.execute("SELECT question FROM questions WHERE id=:id AND number=:number", id=session.get("user_id"), number=i):
+            #    db.execute("INSERT INTO questions (id, number, question) VALUES(:id, :number, :question)", id=session.get("user_id"), number=i, question=request.form.get("q%i"%i))
+            print('checking question: '+ str(i))
+            if not Question.objects.filter(asker = request.user.id, number = i):
+                print('loop 1 option 1')
+                q = Question(asker=request.user, number=i, question = request.POST['q%i'%i])
+                q.save()
             else:
-                db.execute("UPDATE questions SET question = :question WHERE number =:number AND id= :id", question=request.form.get("q%i"%i), number = i, id = session.get("user_id"))
+                print('loop 1 option 2')
+                q = Question.objects.get(asker = request.user.id, number = i)
+                q.question = request.POST['q%i'%i]
+                q.save()
+            #if there are previous questions, overwrite them
+            #else:
+            #    db.execute("UPDATE questions SET question = :question WHERE number =:number AND id= :id", question=request.form.get("q%i"%i), number = i, id = session.get("user_id"))
+
+            print('checking answers now')
+            a = Question.objects.get(asker = request.user.id, number = i)
+            a.ans1 = request.POST['q'+str(i)+'a'+ str(1)]
+            a.ans2 = request.POST['q'+str(i)+'a'+ str(2)]
+            a.ans3 = request.POST['q'+str(i)+'a'+ str(3)]
+            a.ans4 = request.POST['q'+str(i)+'a'+ str(4)]
+            a.ans5 = request.POST['q'+str(i)+'a'+ str(5)]
+            a.ans6 = request.POST['q'+str(i)+'a'+ str(6)]
+            a.save()
 
             #continue loop while anwers exist.
+            
             j = 1
             noanswers = 0
-            while request.form.get("q"+str(i)+"a"+ str(j)):
-                db.execute("UPDATE questions SET ans"+str(j)+" =:ans WHERE number =:number AND id= :id", ans=request.form.get("q"+str(i)+"a"+ str(j)), number = i, id = session.get("user_id"))
-                noanswers += 1
-                j += 1
+            #while request.POST["q"+str(i)+"a"+ str(j)]:
+                #print('saving answer '+ str(j))
+                #db.execute("UPDATE questions SET ans"+str(j)+" =:ans WHERE number =:number AND id= :id", ans=request.form.get("q"+str(i)+"a"+ str(j)), number = i, id = session.get("user_id"))
+                #a = Question.objects.get(asker = request.user.id, number = i)
+                #a.globals()['ans%s' %j] = request.POST['q'+str(i)+'a'+ str(j)]
+                #a.ans = request.POST['q'+str(i)+'a'+ str(j)]
+                #a.save()
+                #noanswers += 1
+                #j += 1
             #record how many answers each question has
-            db.execute("UPDATE questions SET type=:type WHERE number =:number AND id=:id", type=noanswers, number=i, id=session.get("user_id"))
+            #db.execute("UPDATE questions SET type=:type WHERE number =:number AND id=:id", type=noanswers, number=i, id=session.get("user_id"))
+            print('Saving number of answers')
+            t = Question.objects.get(asker = request.user.id, number = i)
+            t.type = noanswers
+            t.save()
             i += 1
 
         #set the number of questions the user has in their survey
-        db.execute("UPDATE users SET questions=:questions WHERE id=:id", questions=i-1, id=session.get("user_id"))
-
-        return alert("Questions saved", "")
+        #db.execute("UPDATE users SET questions=:questions WHERE id=:id", questions=i-1, id=session.get("user_id"))
+        print('Setting the number of questions')
+        s = Surveyer.objects.get(user = request.user.id)
+        s.questions = i-1
+        s.save()
+        return alert(request, "Questions saved", "")
 
     else:
-        print('_____________')
-        #print(request.GET.get('noquestions'))
+        
+        #check the GET to see how many questions the user wants
         if request.GET.get('noquestions'):
             noquestions = int(request.GET.get('noquestions'))
+            
         else:
             noquestions = 0
+
+        s = Surveyer.objects.get(user = request.user.id)
+        s.questions = noquestions
+        s.save()
         #pass through previous questions for autofill from current survey
         print('----User below----')
         print(request.user)
         #questions = db.execute("SELECT * FROM questions WHERE number<=:noquestions AND id=:id", noquestions=db.execute("SELECT questions From users WHERE id=:id", id=session.get("user_id"))[0]["questions"], id=session.get("user_id"))
         questions = Question.objects.filter(asker=request.user.id)
         print('----questions below----')
-        print(questions)
+        #print(questions)
         #users = db.execute("SELECT * FROM users WHERE id=:id", id=session.get("user_id"))
         #users_no_questions=int(users[0]["questions"])
         users_no_questions=int(Surveyer.objects.get(user = request.user.id).questions)
