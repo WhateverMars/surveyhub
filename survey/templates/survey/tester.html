@@ -1,11 +1,47 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    Testign pleaase
-</body>
-</html>
+{% extends "survey/layout.html" %}
+
+{% block head %}
+    Editor
+{% endblock %}
+
+{% block body %}
+    <h1>Here you can set your survey</h1>
+    <form class="survey" action="/editor" method="get">
+        <div class="form-group">
+            <label for="noquestions">Number of questions:</label><br>
+            <input autocomplete="off" autofocus class="form-control" id="noquestions" placeholder="How many questions?" type="number" name="noquestions" {% if users_no_questions %} value="{{users_no_questions}}" {% endif %}>
+        </div>
+        <input type="submit" value="Set number of questions">
+    </form>
+    
+    <form class="survey" action= "/editor" method="post">
+
+        {% if questions %}
+            <p>This says there are questions</p>
+            
+        {% else %}
+
+            <!--This section is for users who have no questions yet-->
+            <p>Please complete all questions and then submit to save</p>
+
+            <p>This is for a new survey</p>
+            {% for n in range %}
+                <div class="form-group">
+                    Q{{n}}. <input autocomplete="off" autofocus class="form-control questionedit" name="q{{ n }}" placeholder="Type in your question {{ n }} here" type="text">
+                    <br>
+                    <input autocomplete="off" autofocus class="form-control" name="q{{n}}a1" placeholder="Answer 1" type="text">
+                    <input autocomplete="off" autofocus class="form-control" name="q{{n}}a2" placeholder="Answer 2" type="text">
+                    <input autocomplete="off" autofocus class="form-control" name="q{{n}}a3" placeholder="Answer 3(optional)" type="text">
+                    <input autocomplete="off" autofocus class="form-control" name="q{{n}}a4" placeholder="Answer 4(optional)" type="text">
+                    <input autocomplete="off" autofocus class="form-control" name="q{{n}}a5" placeholder="Answer 5(optional)" type="text">
+                    <input autocomplete="off" autofocus class="form-control" name="q{{n}}a6" placeholder="Answer 6(optional)" type="text">
+                    <p></p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <br>
+        <button class="btn btn-primary" type="submit">Save Survey</button>
+    </form>
+    <p></p>
+{% endblock %}

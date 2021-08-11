@@ -161,6 +161,72 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+def editor(request):
+    if request.method == "POST":
+
+        print('----USER id: ' + str(id))
+        #record the desired number of questions
+        noquestions = User.objects.get(id)
+        print(noquestions)
+        noquestions = db.execute("SELECT questions From users WHERE id=:id", id=session.get("user_id"))[0]["questions"]
+
+        #Continue loop while questions exist.
+        i=1
+        while request.form.get("q%i"%i):
+
+            #for cases where there is no question to be updated, insert new question entry
+            if not db.execute("SELECT question FROM questions WHERE id=:id AND number=:number", id=session.get("user_id"), number=i):
+                db.execute("INSERT INTO questions (id, number, question) VALUES(:id, :number, :question)", id=session.get("user_id"), number=i, question=request.form.get("q%i"%i))
+
+            #if there are previous questions, overwrite them
+            else:
+                db.execute("UPDATE questions SET question = :question WHERE number =:number AND id= :id", question=request.form.get("q%i"%i), number = i, id = session.get("user_id"))
+
+            #continue loop while anwers exist.
+            j = 1
+            noanswers = 0
+            while request.form.get("q"+str(i)+"a"+ str(j)):
+                db.execute("UPDATE questions SET ans"+str(j)+" =:ans WHERE number =:number AND id= :id", ans=request.form.get("q"+str(i)+"a"+ str(j)), number = i, id = session.get("user_id"))
+                noanswers += 1
+                j += 1
+            #record how many answers each question has
+            db.execute("UPDATE questions SET type=:type WHERE number =:number AND id=:id", type=noanswers, number=i, id=session.get("user_id"))
+            i += 1
+
+        #set the number of questions the user has in their survey
+        db.execute("UPDATE users SET questions=:questions WHERE id=:id", questions=i-1, id=session.get("user_id"))
+
+        return alert("Questions saved", "")
+
+    else:
+        print('_____________')
+        #print(request.GET.get('noquestions'))
+        if request.GET.get('noquestions'):
+            noquestions = int(request.GET.get('noquestions'))
+        else:
+            noquestions = 0
+        #pass through previous questions for autofill from current survey
+        print('----User below----')
+        print(request.user)
+        #questions = db.execute("SELECT * FROM questions WHERE number<=:noquestions AND id=:id", noquestions=db.execute("SELECT questions From users WHERE id=:id", id=session.get("user_id"))[0]["questions"], id=session.get("user_id"))
+        questions = Question.objects.filter(asker=request.user.id)
+        print('----questions below----')
+        print(questions)
+        #users = db.execute("SELECT * FROM users WHERE id=:id", id=session.get("user_id"))
+        #users_no_questions=int(users[0]["questions"])
+        users_no_questions=int(Surveyer.objects.get(user = request.user.id).questions)
+        print('----number of questions below----')
+        print(users_no_questions)
+        #return render_template("editor.html",questions=questions, users=users, users_no_questions=users_no_questions, noquestions=int(request.args.get("noquestions", 0)))
+        return render(request, 'survey/tester.html', {
+            'questions' : questions,
+            'range' : range(1,noquestions+1),
+            'users_no_questions' : users_no_questions
+        })
+
+
+
+
 #this page is flexable to display as required
 def alert(request, message, message2):
     return render(request, "survey/alert.html", {
