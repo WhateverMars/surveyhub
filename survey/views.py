@@ -12,6 +12,7 @@ from django.db import IntegrityError
 #    return render(request, "survey/alert.html")
 
 def index(request):
+    #todo
 
     #create global variable to recieve the indicator of which survey to use
     global temp_id
@@ -41,23 +42,23 @@ def index(request):
 
         #if no id, present with homepage
         if not id:
-            print('======= NO ID ==========')
             return alert(request, "Surveyhub", "If you would like to create a survey please click on the account tab to login or register")
 
         questions = db.execute("SELECT * FROM questions WHERE number<=:noquestions AND id=:id", noquestions=db.execute("SELECT questions From users WHERE id=:id", id=id)[0]["questions"], id=id)
         
-        #return render_template("index.html", questions = questions)
         return render(request, "index.html", {
             'questions' : questions
         })
 
 
 def account(request):
+
+    # if the user is already logged in
     if request.user.is_authenticated:
-        print('User is logged in as' + str(request.user))
         return alert(request,'User is logged in','')
     
     if request.method == "POST":
+        # retrieve posted data
         username = request.POST['username']
         password = request.POST['password']
 
@@ -70,76 +71,52 @@ def account(request):
             return render(request, 'survey/account.html', {
                 'message' : 'password not valid'
             })
-
-        user = authenticate(request, username=username, password=password)
-        print('user is ' + str(user))
+        
         # Check if authentication successful
+        user = authenticate(request, username=username, password=password)
+
         if user is not None:
-            print('User is not none')
+            # authentication success
             login(request, user)
             return HttpResponseRedirect(reverse("account"))
         else:
-            print('User is actually none')
+            # unable to authenticate
             return render(request, "survey/account.html", {
                 "message": "Invalid username and/or password."
             })
         
-    '''
     
-    if request.method == "POST":
-
-        #check username given
-        if not request.form.get("username"):
-            return alert("username please","")
-
-        #check passwork given
-        elif not request.form.get("password"):
-            return alert("password please","")
-
-        #check for name in db
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
-                          username=request.form.get("username"))
-
-        #check name and password match
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return alert("Invalid username/password","")
-
-        #log user in
-        session["user_id"] = rows[0]["id"]
-        return alert("Logged in","")
-
-    else:
-        
-    '''
     return render(request, 'survey/account.html')
 
 def register(request):
+
     #if the user is already logged in
     if request.user.id:
         return alert(request,"Logged in","")
 
     if request.method == "POST":
 
+        # take in the posted data
         username = request.POST["username"]
         password = request.POST["password"]
         email = "N/A"
         confirmation = request.POST["confirmation"]
 
+        # check if the passwords match
         if password != confirmation:
             return render(request, "survey/register.html", {
                 "message": "Passwords must match."
             })
 
-        #check username given
+        # check if username given
         if not username:
             return render(request, "survey/register.html", {
                 "message": "Invalid Username."
             })
         
-        # Attempt to create new user
+        # Attempt to create new user in both the user and surveyer models. These are then linked.
         try:
             user = User.objects.create_user(username, email, password)
-            print(user)
             user.save()
             surveyer = Surveyer(user = user)
             surveyer.save()
@@ -147,13 +124,11 @@ def register(request):
             return render(request, "survey/register.html", {
                 "message": "Username already taken."
             })
+
+        # log user in
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
         
-        
-        #generate hash for password
-        #hash=generate_password_hash(request.form.get("password"))
-
     else:
         return render(request, "survey/register.html")
 
@@ -164,35 +139,23 @@ def logout_view(request):
 def editor(request):
     if request.method == "POST":
 
-        print('----USER id: ')
-        print(request.user.id)
-        #record the desired number of questions
-        #noquestions = User.objects.get(id)
-        print(Surveyer.objects.get(user = request.user.id).questions)
-        #noquestions = db.execute("SELECT questions From users WHERE id=:id", id=session.get("user_id"))[0]["questions"]
-
-        #Continue loop while questions exist.
+        # Continue loop while questions exist.
         i=1
         while i-1 < Surveyer.objects.get(user = request.user.id).questions:
 
-            #for cases where there is no question to be updated, insert new question entry
-            #if not db.execute("SELECT question FROM questions WHERE id=:id AND number=:number", id=session.get("user_id"), number=i):
-            #    db.execute("INSERT INTO questions (id, number, question) VALUES(:id, :number, :question)", id=session.get("user_id"), number=i, question=request.form.get("q%i"%i))
-            print('checking question: '+ str(i))
+            # for cases where there is no question to be updated, add a new question entry
+            
             if not Question.objects.filter(asker = request.user.id, number = i):
-                print('loop 1 option 1')
+                # if they're adding a new question to the existing survey
                 q = Question(asker=request.user, number=i, question = request.POST['q%i'%i])
                 q.save()
             else:
-                print('loop 1 option 2')
+                # if there already exists a question numbered the same
                 q = Question.objects.get(asker = request.user.id, number = i)
                 q.question = request.POST['q%i'%i]
                 q.save()
-            #if there are previous questions, overwrite them
-            #else:
-            #    db.execute("UPDATE questions SET question = :question WHERE number =:number AND id= :id", question=request.form.get("q%i"%i), number = i, id = session.get("user_id"))
-
-            print('checking answers now')
+            
+            # record all the answers and save them
             a = Question.objects.get(asker = request.user.id, number = i)
             a.ans1 = request.POST['q'+str(i)+'a'+ str(1)]
             a.ans2 = request.POST['q'+str(i)+'a'+ str(2)]
@@ -202,30 +165,35 @@ def editor(request):
             a.ans6 = request.POST['q'+str(i)+'a'+ str(6)]
             a.save()
 
-            #continue loop while anwers exist.
-            
-            j = 1
+
             noanswers = 0
-            #while request.POST["q"+str(i)+"a"+ str(j)]:
-                #print('saving answer '+ str(j))
-                #db.execute("UPDATE questions SET ans"+str(j)+" =:ans WHERE number =:number AND id= :id", ans=request.form.get("q"+str(i)+"a"+ str(j)), number = i, id = session.get("user_id"))
-                #a = Question.objects.get(asker = request.user.id, number = i)
-                #a.globals()['ans%s' %j] = request.POST['q'+str(i)+'a'+ str(j)]
-                #a.ans = request.POST['q'+str(i)+'a'+ str(j)]
-                #a.save()
-                #noanswers += 1
-                #j += 1
-            #record how many answers each question has
-            #db.execute("UPDATE questions SET type=:type WHERE number =:number AND id=:id", type=noanswers, number=i, id=session.get("user_id"))
-            print('Saving number of answers')
+            
+            # record how many answers the question has       
+            if a.ans6 == '':
+                print('there is no sixth answer')
+                if a.ans5 == '':
+                    print('there is no fifth answer')
+                    if a.ans4 == '':
+                        if a.ans3 == '':
+                            noanswers = 2
+                        else:
+                            noanswers = 3
+                    else:
+                        noanswers = 4
+                else:
+                    noanswers = 5
+            else:
+                noanswers = 6    
+
+            # saving the number of answers
             t = Question.objects.get(asker = request.user.id, number = i)
             t.type = noanswers
             t.save()
+
+            # move to the next question
             i += 1
 
-        #set the number of questions the user has in their survey
-        #db.execute("UPDATE users SET questions=:questions WHERE id=:id", questions=i-1, id=session.get("user_id"))
-        print('Setting the number of questions')
+        # set the number of questions the user has in their survey
         s = Surveyer.objects.get(user = request.user.id)
         s.questions = i-1
         s.save()
@@ -233,39 +201,39 @@ def editor(request):
 
     else:
         
-        #check the GET to see how many questions the user wants
+        # check the GET to see how many questions the user wants
         if request.GET.get('noquestions'):
-            noquestions = int(request.GET.get('noquestions'))
-            
+            if Surveyer.objects.get(user = request.user.id).questions != int(request.GET.get('noquestions')):
+                noquestions = int(request.GET.get('noquestions'))
+            else:
+                noquestions = Surveyer.objects.get(user = request.user.id).questions
         else:
-            noquestions = 0
+            noquestions = Surveyer.objects.get(user = request.user.id).questions
 
+
+        
+        # pass through previous questions for autofill from current survey
+        questions = Question.objects.filter(asker=request.user.id, number__lte=noquestions)
+                
+        existing_questions = Question.objects.filter(asker = request.user.id).count()
+        
+        # update the number of questions for the user.
         s = Surveyer.objects.get(user = request.user.id)
         s.questions = noquestions
         s.save()
-        #pass through previous questions for autofill from current survey
-        print('----User below----')
-        print(request.user)
-        #questions = db.execute("SELECT * FROM questions WHERE number<=:noquestions AND id=:id", noquestions=db.execute("SELECT questions From users WHERE id=:id", id=session.get("user_id"))[0]["questions"], id=session.get("user_id"))
-        questions = Question.objects.filter(asker=request.user.id)
-        print('----questions below----')
-        #print(questions)
-        #users = db.execute("SELECT * FROM users WHERE id=:id", id=session.get("user_id"))
-        #users_no_questions=int(users[0]["questions"])
-        users_no_questions=int(Surveyer.objects.get(user = request.user.id).questions)
-        print('----number of questions below----')
-        print(users_no_questions)
-        #return render_template("editor.html",questions=questions, users=users, users_no_questions=users_no_questions, noquestions=int(request.args.get("noquestions", 0)))
-        return render(request, 'survey/tester.html', {
+        
+        
+        return render(request, 'survey/editor.html', {
             'questions' : questions,
-            'range' : range(1,noquestions+1),
-            'users_no_questions' : users_no_questions
+            'range_new' : range(1,noquestions+1),
+            'range_existing' : range(existing_questions+1,noquestions+1),
+            'users_no_questions' : noquestions
         })
 
 
 
 
-#this page is flexable to display as required
+# this page is flexable to display messages as required
 def alert(request, message, message2):
     return render(request, "survey/alert.html", {
                 "message": message,

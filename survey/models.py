@@ -16,7 +16,7 @@ class Question(models.Model):
     asker = models.ForeignKey(User, on_delete=models.CASCADE)
     number = models.IntegerField()
     question = models.CharField(max_length=255)
-    type = models.CharField(max_length=64)
+    type = models.IntegerField(default=0)
     ans1 = models.CharField(max_length=255)
     ans2 = models.CharField(max_length=255)
     ans3 = models.CharField(max_length=255)
