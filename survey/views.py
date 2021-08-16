@@ -12,59 +12,45 @@ from django.db import IntegrityError
 #    return render(request, "survey/alert.html")
 
 def index(request):
-    #todo
-
-    #create global variable to recieve the indicator of which survey to use
-    global temp_id
-
-    #if data submittwed
+    
+    #if survey submittwed
     if request.method == "POST":
-        id = temp_id
-        print('___After POST___')
-        print(request.POST['asker'])
         
+        # record the surveyer and calculate which number person surveyed this is
         surveyer = Surveyer.objects.get(user=User(id = request.POST['asker']))
-        print('surveyer below')
-        print(surveyer)
-        
+                
         noquestions = Surveyer.objects.get(user = surveyer).questions
-        print('Number of questions below')
-        print(noquestions)
-        
-        #rows = db.execute("SELECT * FROM questions WHERE id =:id", id=id)
-        #users = db.execute("SELECT DISTINCT user FROM results WHERE id =:id", id=id)
+                
         users = Result.objects.filter(asker = surveyer.user).values('user').distinct()
-        print('users below')
-        print(users)
+        
         usernum = len(users) + 1
-        print('usernum below')
-        print(usernum)
+        
 
-        #record their selected answer for each question to the results table. Iterate through all questions
+        # record their selected answer for each question to the results table. Iterate through all questions
         for i in range(noquestions):
+
             number = i + 1
-            question=Question.objects.get(asker = surveyer.user, number=number)
-            print(question)
-            #answer=request.form.get("%i" % (number))
+            question = Question.objects.get(asker = surveyer.user, number = number)
+            
+            # dynamically request answer
             answer = request.POST['%i' % (number)]
-            print(answer)
-            #db.execute("INSERT INTO results (id, user, number, question, answer) VALUES (:id, :user, :number, :question, :answer)", id=id, user=usernum, number=number, question=question, answer=answer)
+            
+            # save results to db
             r = Result(asker=surveyer.user, user=usernum, number=number, question=question.question, type=question.type, answer=answer)
             r.save()
-        return alert(request, "Results saved", "Thank you")
-    else:
-        #Checks which admin gave this user the survey.
-        
-        print('____BeforePost_____')
-        print(request.GET.get('id'))
-        id = request.GET.get('id')
-        temp_id = request.GET.get('id')
 
-        #if no id, present with homepage
+        # show results received    
+        return alert(request, "Results saved", "Thank you")
+
+    else:
+        # Checks which surveyer gave this user the survey.
+        id = request.GET.get('id')
+
+        # if no id, present with homepage
         if not id:
             return alert(request, "Surveyhub", "If you would like to create a survey please click on the account tab to login or register")
 
-        #questions = db.execute("SELECT * FROM questions WHERE number<=:noquestions AND id=:id", noquestions=db.execute("SELECT questions From users WHERE id=:id", id=id)[0]["questions"], id=id)
+        # give questions
         questions = Question.objects.filter(asker = id)
         return render(request, "survey/index.html", {
             'questions' : questions
@@ -82,6 +68,7 @@ def account(request):
         username = request.POST['username']
         password = request.POST['password']
 
+        # if no username or password given
         if not username:
             return render(request, 'survey/account.html', {
                 'message' : 'username not valid'
@@ -105,12 +92,11 @@ def account(request):
                 "message": "Invalid username and/or password."
             })
         
-    
     return render(request, 'survey/account.html')
 
 def register(request):
 
-    #if the user is already logged in
+    # if the user is already logged in
     if request.user.id:
         return alert(request,"Logged in","")
 
@@ -185,14 +171,12 @@ def editor(request):
             a.ans6 = request.POST['q'+str(i)+'a'+ str(6)]
             a.save()
 
-
+            # reset no answers each time
             noanswers = 0
             
             # record how many answers the question has       
             if a.ans6 == '':
-                print('there is no sixth answer')
                 if a.ans5 == '':
-                    print('there is no fifth answer')
                     if a.ans4 == '':
                         if a.ans3 == '':
                             noanswers = 2
@@ -250,7 +234,8 @@ def editor(request):
             'users_no_questions' : noquestions
         })
 
-
+def results(request):
+    return render(request, 'survey/tester.html')
 
 
 # this page is flexable to display messages as required
