@@ -1,6 +1,6 @@
 # Surveyhub
 
-This is SurveyHub a site for creating and sharing custom surveys. It is currently a work in progress.
+This is SurveyHub a site for creating and sharing custom surveys. It is currently a fully functional but will receive additional updates.
 
 This site is built primarily in Python through the Django framework. It uses sqlite to manage the database of surveys, results and user accounts.
 
@@ -10,4 +10,4 @@ Once they have an account they can click through to the editor page where they c
 
 Once they click the save survey button, the survey is saved to the database and they are provided with a link to share the survey. Survey participants do not need accounts to complete the survey and only need to follow the link, answer the questions and hit submit.
 
-Later the surveyor will be able to check back and click onto the results page. Once this page is completed it will display a breakdown of the results and lowerdown the raw collected data will also be given. There will also be an export button which will provide all the data in a csv file for their own analysis. There will also be a delete button which permanently deletes all the results.
+Later the surveyor will be able to check back and click onto the results page. This page displays a breakdown of the results and lower down the raw collected data is also given. Further down the page is an export button which will provide all the data in a csv file for their own analysis. Below this there is a delete button which permanently deletes all the results after double checking the users decision.

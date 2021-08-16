@@ -141,7 +141,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-@login_required
+@login_required(login_url='/account')
 def editor(request):
     if request.method == "POST":
 
@@ -215,7 +215,6 @@ def editor(request):
             noquestions = Surveyer.objects.get(user = request.user.id).questions
 
 
-        
         # pass through previous questions for autofill from current survey
         questions = Question.objects.filter(asker=request.user.id, number__lte=noquestions)
                 
@@ -226,7 +225,6 @@ def editor(request):
         s.questions = noquestions
         s.save()
         
-        
         return render(request, 'survey/editor.html', {
             'questions' : questions,
             'range_new' : range(1,noquestions+1),
@@ -234,7 +232,7 @@ def editor(request):
             'users_no_questions' : noquestions
         })
 
-@login_required
+@login_required(login_url='/account')
 def results(request):
     
     results = Result.objects.filter(asker = request.user.id)
@@ -268,17 +266,13 @@ def results(request):
     # summerise results
     for i in range(noquestions):
         number = i + 1
-        print('question '+ str(number))
         # count the number of votes for each answer for this question
-        ans1count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans1).count()
-        print('ans1count: '+ str(ans1count))
-        ans2count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans2).count()
-        print('ans2count: '+ str(ans2count))
-        ans3count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans3).count()
-        print('ans3count: '+ str(ans3count))
-        ans4count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans4).count()
-        ans5count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans5).count()
-        ans6count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans6).count()
+        ans1count = Result.objects.filter(asker = request.user.id, number = number, answer = questions[i].ans1).count()
+        ans2count = Result.objects.filter(asker = request.user.id, number =number, answer = questions[i].ans2).count()
+        ans3count = Result.objects.filter(asker = request.user.id, number = number, answer = questions[i].ans3).count()
+        ans4count = Result.objects.filter(asker = request.user.id, number = number, answer = questions[i].ans4).count()
+        ans5count = Result.objects.filter(asker = request.user.id, number = number, answer = questions[i].ans5).count()
+        ans6count = Result.objects.filter(asker = request.user.id, number = number, answer = questions[i].ans6).count()
         
         # Update the analysis table
         if not Analysis.objects.filter(asker = request.user.id, number=number):
@@ -300,10 +294,13 @@ def results(request):
         'surveyed' : surveyed
     })
 
-@login_required
+
+@login_required(login_url='/account')
 def cleardata(request):
 
+    # This allows for double checking with the user on deletion decision
     if request.method == 'POST':
+        # delete all data from both the Results and Analysis tables
         Result.objects.filter(asker=request.user).delete()
         Analysis.objects.filter(asker=request.user).delete()
         return alert(request, 'Data Deleted', '')
@@ -312,13 +309,17 @@ def cleardata(request):
 
 # this page is flexable to display messages as required
 def alert(request, message, message2):
+
+    # checks if the user is logged in
     if request.user.id:
+        # this simply checks if the user has created a survey already
         questions = Question.objects.filter(asker = request.user)
         return render(request, "survey/alert.html", {
                     'message': message,
                     'message2': message2,
                     'questions' : questions
                 })
+
     return render(request, "survey/alert.html", {
                     'message': message,
                     'message2': message2

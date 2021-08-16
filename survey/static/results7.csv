@@ -5,9 +5,9 @@ user number,question number,question,answer
 2,1,Do you have long hair or short?,Long
 2,2,Have you ever contemplated murder?,No
 2,3,Do you think there is a correlation between the answers to question 1 and two?,Yes
-3,1,Do you have long hair or short?,Long
-3,2,Have you ever contemplated murder?,No
-3,3,Do you think there is a correlation between the answers to question 1 and two?,Yes
+3,1,Do you have long hair or short?,Fully bald
+3,2,Have you ever contemplated murder?,Yes
+3,3,Do you think there is a correlation between the answers to question 1 and two?,No
 4,1,Do you have long hair or short?,Fully bald
-4,2,Have you ever contemplated murder?,No
-4,3,Do you think there is a correlation between the answers to question 1 and two?,Yes
+4,2,Have you ever contemplated murder?,Yes
+4,3,Do you think there is a correlation between the answers to question 1 and two?,It's possible
