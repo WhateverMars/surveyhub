@@ -39,6 +39,7 @@ class Result(models.Model):
         return f'{self.answer}'
 
 class Analysis(models.Model):
+    asker = models.ForeignKey(User, on_delete=models.CASCADE)
     userstot = models.IntegerField()
     number = models.IntegerField()
     question = models.CharField(max_length=255)

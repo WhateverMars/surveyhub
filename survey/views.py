@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Surveyer, User, Question, Result, Analysis
 from django.urls import reverse
 from django.db import IntegrityError
+import csv
 
 # Create your views here.
 #def index(request):
@@ -235,6 +236,62 @@ def editor(request):
         })
 
 def results(request):
+    
+    results = Result.objects.filter(asker = request.user.id)
+    print('________RESULTS TEST__________')
+    print(results[0].user)
+    # if the user has not recieved any results yet
+    if not results:
+        return alert("No results yet","Check back later once your survey has been answered")
+
+    # write the results to a csv file.
+    with open("survey/static/results"+ str(request.user.id) +".csv", 'w') as csvfile:
+
+        # creating a csv writer object
+        writer = csv.writer(csvfile)
+
+        # writing the column titles
+        writer.writerow(["user number", "question number", "question", "answer"])
+
+        # write each row of data
+        i=0
+        for row in results:
+            writer.writerow([results[i].user, results[i].number, results[i].question, results[i].answer])
+            i +=1
+
+    
+    surveyed = Result.objects.filter(asker = request.user.id).last().user
+    
+    noquestions = Surveyer.objects.get(user = request.user.id).questions
+    
+    questions = Question.objects.filter(asker = request.user.id)
+
+    # summerise results
+    for i in range(noquestions):
+        number = i + 1
+
+        # count the number of votes for each answer for this question
+        ans1count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans1).count()
+        ans2count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans2).count()
+        ans3count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans3).count()
+        ans4count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans4).count()
+        ans5count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans5).count()
+        ans6count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans6).count()
+        
+        # Update the analysis table
+        if not Analysis.objects.filter(asker = request.user.id, number=number):
+            a = Analysis(asker = request.user, userstot = surveyed, number=number, question=questions[i].question, ans1count=ans1count, ans2count=ans2count, ans3count=ans3count, ans4count=ans4count, ans5count=ans5count, ans6count=ans6count, ans1=questions[i].ans1, ans2=questions[i].ans2, ans3=questions[i].ans3, ans4=questions[i].ans4, ans5=questions[i].ans5, ans6=questions[i].ans6)
+            a.save()
+
+        # if there are previous entries, overwrite them
+        else:
+            Analysis.objects.filter(asker = request.user.id, number=number).delete()
+            a = Analysis(asker = request.user, userstot = surveyed, number=number, question=questions[i].question, ans1count=ans1count, ans2count=ans2count, ans3count=ans3count, ans4count=ans4count, ans5count=ans5count, ans6count=ans6count, ans1=questions[i].ans1, ans2=questions[i].ans2, ans3=questions[i].ans3, ans4=questions[i].ans4, ans5=questions[i].ans5, ans6=questions[i].ans6)
+            a.save()
+
+    analysis=Analysis.objects.filter(asker = request.user.id)
+
+    #return both the results and the analysis table.
     return render(request, 'survey/tester.html')
 
 
