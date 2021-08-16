@@ -52,8 +52,9 @@
     <form  action= "/" method="post">
         {% csrf_token %}
         <div class="survey">
+            
             {% for row in questions %}
-
+            <input type="hidden" name="asker" value="{{row.asker.id}}">
                 <p class="question">{{row.number}}. {{ row.question }}</p>
                 <div class="aligner">
 

@@ -9,7 +9,7 @@ class Surveyer(models.Model):
     questions = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.user.username}"
 
 
 class Question(models.Model):
@@ -25,13 +25,14 @@ class Question(models.Model):
     ans6 = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.number: self.question}'
+        return f'{self.question}'
     
 class Result(models.Model):
+    asker = models.ForeignKey(User, on_delete=models.CASCADE)
     user = models.IntegerField()
     number = models.IntegerField()
     question = models.CharField(max_length=255)
-    type = models.CharField(max_length=64)
+    type = models.IntegerField(default=0)
     answer = models.CharField(max_length=255)
 
     def __str__(self):

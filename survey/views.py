@@ -20,24 +20,42 @@ def index(request):
     #if data submittwed
     if request.method == "POST":
         id = temp_id
-        noquestions = Surveyer.objects.get(user = request.GET.get('id')).questions
+        print('___After POST___')
+        print(request.POST['asker'])
+        
+        surveyer = Surveyer.objects.get(user=User(id = request.POST['asker']))
+        print('surveyer below')
+        print(surveyer)
+        
+        noquestions = Surveyer.objects.get(user = surveyer).questions
         print('Number of questions below')
         print(noquestions)
-        rows = db.execute("SELECT * FROM questions WHERE id =:id", id=id)
-        users = db.execute("SELECT DISTINCT user FROM results WHERE id =:id", id=id)
+        
+        #rows = db.execute("SELECT * FROM questions WHERE id =:id", id=id)
+        #users = db.execute("SELECT DISTINCT user FROM results WHERE id =:id", id=id)
+        users = Result.objects.filter(asker = surveyer.user).values('user').distinct()
+        print('users below')
+        print(users)
         usernum = len(users) + 1
+        print('usernum below')
+        print(usernum)
 
         #record their selected answer for each question to the results table. Iterate through all questions
         for i in range(noquestions):
             number = i + 1
-            question=db.execute("SELECT question FROM questions WHERE id=:id AND number=:number", id=id, number = number)[0]["question"]
-            answer=request.form.get("%i" % (number))
-            db.execute("INSERT INTO results (id, user, number, question, answer) VALUES (:id, :user, :number, :question, :answer)", id=id, user=usernum, number=number, question=question, answer=answer)
-        return alert("Results saved", "Thank you")
+            question=Question.objects.get(asker = surveyer.user, number=number)
+            print(question)
+            #answer=request.form.get("%i" % (number))
+            answer = request.POST['%i' % (number)]
+            print(answer)
+            #db.execute("INSERT INTO results (id, user, number, question, answer) VALUES (:id, :user, :number, :question, :answer)", id=id, user=usernum, number=number, question=question, answer=answer)
+            r = Result(asker=surveyer.user, user=usernum, number=number, question=question.question, type=question.type, answer=answer)
+            r.save()
+        return alert(request, "Results saved", "Thank you")
     else:
         #Checks which admin gave this user the survey.
         
-        print('_________')
+        print('____BeforePost_____')
         print(request.GET.get('id'))
         id = request.GET.get('id')
         temp_id = request.GET.get('id')
