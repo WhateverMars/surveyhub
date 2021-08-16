@@ -1,5 +1,5 @@
 {% extends "survey/layout.html" %}
-
+{% load mathfilters %}
 {% block head %}
     Results
 {% endblock %}
@@ -15,42 +15,42 @@
         {% if row.ans1count != 0 %}
         <li class="list-group-item">
             <div class="progress" style="height: 40px;">
-                <div class="progress-bar" role="progressbar" style="width: {{100*row.ans1count/row.userstot }}%" aria-valuenow="{{row.ans1count}}" aria-valuemin="0" aria-valuemax="100">{{row.ans1}}: {{row.ans1count}}</div>
+                <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans1count|div:row.userstot }}%" aria-valuenow="{{row.ans1count}}" aria-valuemin="0" aria-valuemax="100">{{row.ans1}}: {{row.ans1count}}</div>
             </div>
         </li>
         {% endif %}
         {% if row.ans2count != 0 %}
         <li class="list-group-item">
             <div class="progress" style="height: 40px;">
-                <div class="progress-bar" role="progressbar" style="width: {{100*row.ans2count/row.userstot }}%" aria-valuenow="{{row.ans2count}}" aria-valuemin="0" aria-valuemax="100">{{row.ans2}}: {{row.ans2count}}</div>
+                <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans2count|div:row.userstot }}%" aria-valuenow="{{row.ans2count}}" aria-valuemin="0" aria-valuemax="100">{{row.ans2}}: {{row.ans2count}}</div>
             </div>
         </li>
         {% endif %}
         {% if row.ans3count != 0 %}
         <li class="list-group-item">
             <div class="progress" style="height: 40px;">
-                <div class="progress-bar" role="progressbar" style="width: {{100*row.ans3count/row.userstot }}%" aria-valuenow="{{row.ans3count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans3}}: {{row.ans3count}}</div>
+                <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans3count|div:row.userstot }}%" aria-valuenow="{{row.ans3count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans3}}: {{row.ans3count}}</div>
             </div>
         </li>
         {% endif %}
         {% if row.ans4count != 0 %}
         <li class="list-group-item">
             <div class="progress" style="height: 40px;">
-                <div class="progress-bar" role="progressbar" style="width: {{100*row.ans4count/row.userstot }}%" aria-valuenow="{{row.ans4count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans4}}: {{row.ans4count}}</div>
+                <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans4count|div:row.userstot }}%" aria-valuenow="{{row.ans4count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans4}}: {{row.ans4count}}</div>
             </div>
         </li>
         {% endif %}
         {% if row.ans5count != 0 %}
         <li class="list-group-item">
             <div class="progress" style="height: 40px;">
-                <div class="progress-bar" role="progressbar" style="width: {{100*row.ans5count/row.userstot }}%" aria-valuenow="{{row.ans5count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans5}}: {{row.ans5count}}</div>
+                <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans5count|div:row.userstot }}%" aria-valuenow="{{row.ans5count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans5}}: {{row.ans5count}}</div>
             </div>
         </li>
         {% endif %}
         {% if row.ans6count != 0 %}
         <li class="list-group-item">
             <div class="progress" style="height: 40px;">
-                <div class="progress-bar" role="progressbar" style="width: {{100*row.ans6count/row.userstot }}%" aria-valuenow="{{row.ans6count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans6}}: {{row.ans6count}}</div>
+                <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans6count|div:row.userstot }}%" aria-valuenow="{{row.ans6count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans6}}: {{row.ans6count}}</div>
             </div>
         </li>
         {% endif %}
@@ -88,7 +88,7 @@
     </table>
 
     <p class="centering">
-        <!--<a class="btn btn-primary" type="button" href="/static/results{{session.get("user_id")}}.csv" download="results.csv">Export</a>--> Export button broken
+        <a class="btn btn-primary" type="button" href="/static/results{{request.user.id}}.csv" download="results.csv">Export</a>
     </p>
 
     <form class="centering" action="/cleardata">

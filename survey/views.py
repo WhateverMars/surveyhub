@@ -292,7 +292,11 @@ def results(request):
     analysis=Analysis.objects.filter(asker = request.user.id)
 
     #return both the results and the analysis table.
-    return render(request, 'survey/tester.html')
+    return render(request, 'survey/results.html', {
+        'results' : results,
+        'analysis' : analysis,
+        'surveyed' : surveyed
+    })
 
 
 # this page is flexable to display messages as required
