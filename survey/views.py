@@ -1,3 +1,4 @@
+from django.db.models import query
 from django.db.models.fields import EmailField
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,9 +9,6 @@ from django.urls import reverse
 from django.db import IntegrityError
 import csv
 
-# Create your views here.
-#def index(request):
-#    return render(request, "survey/alert.html")
 
 def index(request):
     
@@ -143,6 +141,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+@login_required
 def editor(request):
     if request.method == "POST":
 
@@ -235,14 +234,14 @@ def editor(request):
             'users_no_questions' : noquestions
         })
 
+@login_required
 def results(request):
     
     results = Result.objects.filter(asker = request.user.id)
-    print('________RESULTS TEST__________')
-    print(results[0].user)
+    
     # if the user has not recieved any results yet
     if not results:
-        return alert("No results yet","Check back later once your survey has been answered")
+        return alert(request, "No results yet","Check back later once your survey has been answered")
 
     # write the results to a csv file.
     with open("survey/static/results"+ str(request.user.id) +".csv", 'w') as csvfile:
@@ -269,11 +268,14 @@ def results(request):
     # summerise results
     for i in range(noquestions):
         number = i + 1
-
+        print('question '+ str(number))
         # count the number of votes for each answer for this question
         ans1count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans1).count()
+        print('ans1count: '+ str(ans1count))
         ans2count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans2).count()
+        print('ans2count: '+ str(ans2count))
         ans3count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans3).count()
+        print('ans3count: '+ str(ans3count))
         ans4count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans4).count()
         ans5count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans5).count()
         ans6count = Result.objects.filter(asker = request.user.id, answer = questions[i].ans6).count()
@@ -289,19 +291,35 @@ def results(request):
             a = Analysis(asker = request.user, userstot = surveyed, number=number, question=questions[i].question, ans1count=ans1count, ans2count=ans2count, ans3count=ans3count, ans4count=ans4count, ans5count=ans5count, ans6count=ans6count, ans1=questions[i].ans1, ans2=questions[i].ans2, ans3=questions[i].ans3, ans4=questions[i].ans4, ans5=questions[i].ans5, ans6=questions[i].ans6)
             a.save()
 
-    analysis=Analysis.objects.filter(asker = request.user.id)
+    analysis = Analysis.objects.filter(asker = request.user.id)
 
-    #return both the results and the analysis table.
+    # return both the results and the analysis table.
     return render(request, 'survey/results.html', {
         'results' : results,
         'analysis' : analysis,
         'surveyed' : surveyed
     })
 
+@login_required
+def cleardata(request):
+
+    if request.method == 'POST':
+        Result.objects.filter(asker=request.user).delete()
+        Analysis.objects.filter(asker=request.user).delete()
+        return alert(request, 'Data Deleted', '')
+
+    return render(request, "survey/delete.html")
 
 # this page is flexable to display messages as required
 def alert(request, message, message2):
+    if request.user.id:
+        questions = Question.objects.filter(asker = request.user)
+        return render(request, "survey/alert.html", {
+                    'message': message,
+                    'message2': message2,
+                    'questions' : questions
+                })
     return render(request, "survey/alert.html", {
-                "message": message,
-                "message2": message2
-            })
+                    'message': message,
+                    'message2': message2
+                })
