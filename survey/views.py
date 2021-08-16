@@ -20,7 +20,9 @@ def index(request):
     #if data submittwed
     if request.method == "POST":
         id = temp_id
-        noquestions = db.execute("SELECT questions From users WHERE id=:id", id=id)[0]["questions"]
+        noquestions = Surveyer.objects.get(user = request.GET.get('id')).questions
+        print('Number of questions below')
+        print(noquestions)
         rows = db.execute("SELECT * FROM questions WHERE id =:id", id=id)
         users = db.execute("SELECT DISTINCT user FROM results WHERE id =:id", id=id)
         usernum = len(users) + 1
@@ -44,9 +46,9 @@ def index(request):
         if not id:
             return alert(request, "Surveyhub", "If you would like to create a survey please click on the account tab to login or register")
 
-        questions = db.execute("SELECT * FROM questions WHERE number<=:noquestions AND id=:id", noquestions=db.execute("SELECT questions From users WHERE id=:id", id=id)[0]["questions"], id=id)
-        
-        return render(request, "index.html", {
+        #questions = db.execute("SELECT * FROM questions WHERE number<=:noquestions AND id=:id", noquestions=db.execute("SELECT questions From users WHERE id=:id", id=id)[0]["questions"], id=id)
+        questions = Question.objects.filter(asker = id)
+        return render(request, "survey/index.html", {
             'questions' : questions
         })
 
