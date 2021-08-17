@@ -4,6 +4,9 @@
         padding:10px;
     }
 
+    h1{
+        font-size:60px;
+    }
     .nav-item{
         vertical-align: middle;
     }
@@ -52,7 +55,7 @@
     }
 
     .nav{
-        padding:0px;
+        padding: 2px;
     }
 
     .nav-item{
@@ -61,6 +64,7 @@
 
     h1{
         margin:auto;
+        font-size: 40px;
     }
     .subhead{
         padding:5%;

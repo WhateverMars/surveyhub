@@ -5,6 +5,11 @@
     box-sizing:border-box;
 }
 
+html{
+    position: relative;
+    min-height: 100%;
+}
+
 .nav{
     text-align:center;
     list-style: none;
@@ -26,10 +31,12 @@ h1{
     margin-bottom:50px;
     text-align:center;
     padding:20px;
-    font-size:60px;
+    font-size:40px;
 }
 
-
+body{
+    margin: 0 0 100px;
+}
 
 .home{
     color:white;
@@ -112,7 +119,14 @@ p{
     justify-content: center;
 }
 
-footer{
+.footer{
     text-align:center;
-    margin-top:17%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding-top: 20;
+    padding-bottom: 20px;
+    background-color: gray;
+    color: white;
 }

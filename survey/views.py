@@ -60,7 +60,7 @@ def account(request):
 
     # if the user is already logged in
     if request.user.is_authenticated:
-        return alert(request,'User is logged in','')
+        return alert(request,'Hi ' + request.user.username,'You can now create or edit surveys')
     
     if request.method == "POST":
         # retrieve posted data
