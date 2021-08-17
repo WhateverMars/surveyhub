@@ -7,12 +7,14 @@ from django.contrib.auth.decorators import login_required
 from .models import Surveyer, User, Question, Result, Analysis
 from django.urls import reverse
 from django.db import IntegrityError
+from .util import random_string
+import random
 import csv
 
 
 def index(request):
     
-    #if survey submittwed
+    #if survey submitted
     if request.method == "POST":
         
         # record the surveyer and calculate which number person surveyed this is
@@ -43,14 +45,16 @@ def index(request):
 
     else:
         # Checks which surveyer gave this user the survey.
-        id = request.GET.get('id')
-
+        surveyer = Surveyer.objects.filter(link = request.GET.get('id')).first()
+        
         # if no id, present with homepage
-        if not id:
+        if not surveyer:
             return alert(request, "Surveyhub", "If you would like to create a survey please click on the account tab to login or register")
 
         # give questions
-        questions = Question.objects.filter(asker = id)
+        
+        questions = Question.objects.filter(asker = surveyer.user.id)
+
         return render(request, "survey/index.html", {
             'questions' : questions
         })
@@ -106,6 +110,9 @@ def register(request):
         password = request.POST["password"]
         email = "N/A"
         confirmation = request.POST["confirmation"]
+        link = random_string(10)
+
+        
 
         # check if the passwords match
         if password != confirmation:
@@ -123,7 +130,7 @@ def register(request):
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
-            surveyer = Surveyer(user = user)
+            surveyer = Surveyer(user = user, link = link)
             surveyer.save()
         except IntegrityError:
             return render(request, "survey/register.html", {
