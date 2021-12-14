@@ -69,6 +69,11 @@
     .subhead{
         padding:5%;
     }
+
+    #pwRequirements{
+        list-style: square inside;
+        margin: 0 25%;
+    }
 }
 
 @media only screen and (max-width:480px)
@@ -87,6 +92,9 @@
 
     }
 
-
+    #pwRequirements{
+        list-style: square inside;
+        margin: 0 15%;
+    }
 
 }

@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block body %}
+    {% load static %}
+    <script src="{% static 'survey/passwordCheck.js' %}"></script>
     <h1>Registration</h1>
     <p>Set up an account to create and share surveys</p>
     {% if message %}
@@ -13,14 +15,20 @@
     <form class="centering admin" action="/register" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+            <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Username" type="text">
         </div>
         <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
+            <input class="form-control" id="password" name="password" placeholder="Password" type="password">
         </div>
         <div class="form-group">
-            <input class="form-control" name="confirmation" placeholder="Confirm Password" type="password">
+            <input class="form-control" id="confirmation" name="confirmation" placeholder="Confirm Password" type="password">
         </div>
-        <button class="btn btn-primary" type="submit">Register</button>
+        <button class="btn btn-primary" id="registerBtn" type="submit">Register</button>
     </form>
+    <ul id="pwRequirements">
+        <li id="ReqLen" hidden>Password must be at least 8 characters.</li>
+        <li id="ReqUpper" hidden>Password must contain 1 upper case character.</li>
+        <li id="ReqLower" hidden>Password must contain 1 lower case character.</li>
+        <li id="ReqMatch" hidden> Passwords must match</li>
+    </ul>
 {% endblock %}

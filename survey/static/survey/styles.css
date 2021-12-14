@@ -119,13 +119,22 @@ p{
     justify-content: center;
 }
 
+#pwRequirements{
+    list-style: square inside;
+    margin: 0 35%;
+}
+
+#pwRequirements li{
+    color: rgb(182, 118, 0);
+}
+
 .footer{
     text-align:center;
     position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
-    padding-top: 20;
+    padding-top: 20px;
     padding-bottom: 20px;
     background-color: gray;
     color: white;
