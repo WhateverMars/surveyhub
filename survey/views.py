@@ -49,7 +49,10 @@ def index(request):
         
         # if no id, present with homepage
         if not surveyer:
-            return alert(request, "Surveyhub", "If you would like to create a survey please click on the account tab to login or register")
+            if request.user.is_authenticated:
+                return account(request)
+            else:
+                return alert(request, "Surveyhub", "If you would like to create a survey please click on the account tab to login or register.")
 
         # give questions
         
@@ -64,7 +67,7 @@ def account(request):
 
     # if the user is already logged in
     if request.user.is_authenticated:
-        return alert(request,'Hi ' + request.user.username,'You can now create or edit surveys')
+        return alert(request,'Welcome ' + request.user.username+'!','You can now create or edit surveys.')
     
     if request.method == "POST":
         # retrieve posted data
@@ -108,12 +111,11 @@ def register(request):
         # take in the posted data
         username = request.POST["username"]
         password = request.POST["password"]
-        email = "N/A"
+        email = request.POST["password"]
         confirmation = request.POST["confirmation"]
         link = random_string(10)
 
-        
-
+        '''
         # check if the passwords match
         if password != confirmation:
             return render(request, "survey/register.html", {
@@ -125,7 +127,7 @@ def register(request):
             return render(request, "survey/register.html", {
                 "message": "Invalid Username."
             })
-        
+        '''
         # Attempt to create new user in both the user and surveyer models. These are then linked.
         try:
             user = User.objects.create_user(username, email, password)
@@ -139,7 +141,7 @@ def register(request):
 
         # log user in
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return account(request)
         
     else:
         return render(request, "survey/register.html")
@@ -208,7 +210,7 @@ def editor(request):
         s = Surveyer.objects.get(user = request.user.id)
         s.questions = i-1
         s.save()
-        return alert(request, "Questions saved", "")
+        return alert(request, "Questions saved.", "You can now share your survey.")
 
     else:
         
@@ -246,7 +248,7 @@ def results(request):
     
     # if the user has not recieved any results yet
     if not results:
-        return alert(request, "No results yet","Check back later once your survey has been answered")
+        return alert(request, "No results yet.","Check back later once your survey has been answered.")
 
     # write the results to a csv file.
     with open("survey/static/results"+ str(request.user.id) +".csv", 'w') as csvfile:

@@ -1,8 +1,13 @@
 *{
-    font-weight: 300;
+    font-weight: 400;
     margin: 0px;
     padding: 0px;
     box-sizing:border-box;
+}
+
+html{
+    position: relative;
+    min-height: 100%;
 }
 
 .nav{
@@ -11,7 +16,6 @@
     background-color:black;
     opacity: 0.6;
     padding:20px;
-
 }
 
 .nav-item{
@@ -22,13 +26,16 @@
     margin:auto;
 }
 
-
 h1{
     margin-top:50px;
     margin-bottom:50px;
     text-align:center;
     padding:20px;
-    font-size:60px;
+    font-size:40px;
+}
+
+body{
+    margin: 0 0 100px;
 }
 
 .home{
@@ -51,7 +58,8 @@ br{
 .aligner{
     /*display: flex;*/
     justify-content: center;
-    margin: 0 30%;
+    /*margin: 0 30%;*/
+    padding: 0 0 0 30%;
     text-align:left;
 }
 
@@ -60,13 +68,11 @@ br{
     font-weight: bold;
     margin: 0 10% 10px 10%;
     padding-left:10%;
-    background-color:lightblue;
-
 }
 
 .form-control
 {
-    /*display: inline-block;*/
+    display: inline-block;
     width: auto;
 }
 
@@ -79,6 +85,17 @@ br{
     display: inline-block;
     width:100%;
     text-align:center;
+}
+
+input[type="radio"] {
+  display: inline;
+
+}
+
+
+.progress-bar{
+    font-size:110%;
+    text-shadow: 1px 1px 0px #000000, 1px 1px 0px #000000;
 }
 
 .admin{
@@ -102,8 +119,23 @@ p{
     justify-content: center;
 }
 
+#pwRequirements{
+    list-style: square inside;
+    margin: 0 35%;
+}
 
-footer{
+#pwRequirements li{
+    color: rgb(182, 118, 0);
+}
+
+.footer{
     text-align:center;
-    margin-top:17%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: gray;
+    color: white;
 }

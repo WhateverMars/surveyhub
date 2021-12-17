@@ -13,23 +13,34 @@
         <title>{% block head %}{% endblock %}</title>
     </head>
     <body>
+        <div>
         <header>
-
-            <ul class = "nav">
-                {% if user.is_authenticated %}
-                       <li class="nav-item"><a href="/editor">Survey Editor</a></li>
-                {% else %}
-                    <li class="nav-item"><a href="/">Surveyhub</a></li>
-                {% endif%}
-                    <li class="nav-item"><a href="/account">Account</a></li>
-            </ul>
+            
+            <div class="nav-bar">
+                <div class="nav-left">
+                    <div class="logo"><a href="/">Surveyhub</a></div>
+                </div>
+                <div class="nav-right">
+                    {% if user.is_authenticated %}
+                    <div class="nav-item"><a href="/editor">Survey Editor</a></div>
+                    <div class="nav-item"><a href="/account">Account</a></div>
+                    {% else %}
+                    
+                    <div class="nav-item"><a href="/account">Log-In</a></div>
+                    <div class="nav-item"><a href="/register">Register</a></div>
+                    {% endif%}
+                </div>
+            </div>
 
         </header>
+        </div>
         <div class="bodymain">
         {% block body %}{% endblock %}
         </div>
+        <div>
         <footer class="footer">
             A site by David Kelly
         </footer>
+        </div>
     </body>
 </html>

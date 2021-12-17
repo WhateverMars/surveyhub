@@ -6,89 +6,96 @@
 
 {% block body %}
     {% if user.is_authenticated %}
-        <h1>Survey Preview</h1>
-        <div class="survey">
-        {% if questions %}
-            {% for row in questions %}
+        <div class="surveyPreview">
+            <div class="previewIntro">
+                <h1>Survey Preview</h1>
+                <p>This is a preview of your survey as it will appear to the people you send the link to.</p>
+                <p>You cannot complete the survey yourself while logged in.</p>
+            </div>
+            <div class="survey">
+            {% if questions %}
+                {% for row in questions %}
 
-                <p class="question">{{row.number}}. {{ row.question }}</p>
-                
-                <div class="aligner">
-                {% if row.type >= 1 %}
-                    <label for="option{{row.number}}.1"><input type="radio" id="option{{row.number}}.1" name="{{row.number}}" value="{{row.ans1}}" /> {{row.ans1}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 2 %}
-                    <label for="option{{row.number}}.2"><input type="radio" id="option{{row.number}}.2" name="{{row.number}}" value="{{row.ans2}}" /> {{row.ans2}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 3 %}
-                    <label for="option{{row.number}}.3"><input type="radio" id="option{{row.number}}.3" name="{{row.number}}" value="{{row.ans3}}" /> {{row.ans3}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 4 %}
-                    <label for="option{{row.number}}.4"><input type="radio" id="option{{row.number}}.4" name="{{row.number}}" value="{{row.ans4}}" /> {{row.ans4}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 5 %}
-                    <label for="option{{row.number}}.5"><input type="radio" id="option{{row.number}}.5" name="{{row.number}}" value="{{row.ans5}}" /> {{row.ans5}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 6 %}
-                    <label for="option{{row.number}}.6"><input type="radio" id="option{{row.number}}.6" name="{{row.number}}" value="{{row.ans6}}" /> {{row.ans6}}</label>
-                    <br>
-                {% endif %}
+                    <p class="question">{{row.number}}. {{ row.question }}</p>
+                    
+                    <div class="aligner">
+                    {% if row.type >= 1 %}
+                        <label for="option{{row.number}}.1"><input type="radio" id="option{{row.number}}.1" name="{{row.number}}" value="{{row.ans1}}" /> {{row.ans1}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 2 %}
+                        <label for="option{{row.number}}.2"><input type="radio" id="option{{row.number}}.2" name="{{row.number}}" value="{{row.ans2}}" /> {{row.ans2}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 3 %}
+                        <label for="option{{row.number}}.3"><input type="radio" id="option{{row.number}}.3" name="{{row.number}}" value="{{row.ans3}}" /> {{row.ans3}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 4 %}
+                        <label for="option{{row.number}}.4"><input type="radio" id="option{{row.number}}.4" name="{{row.number}}" value="{{row.ans4}}" /> {{row.ans4}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 5 %}
+                        <label for="option{{row.number}}.5"><input type="radio" id="option{{row.number}}.5" name="{{row.number}}" value="{{row.ans5}}" /> {{row.ans5}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 6 %}
+                        <label for="option{{row.number}}.6"><input type="radio" id="option{{row.number}}.6" name="{{row.number}}" value="{{row.ans6}}" /> {{row.ans6}}</label>
+                        <br>
+                    {% endif %}
 
-                <p></p>
+                    <p></p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No questions yet! Come back later once you have created the survey.</p>
+                <p>You can create your survey <a href="/editor">here</a>.</p>
+            {% endif %}
+                <div class="btn-section">
+                    <p> This cannot be submitted.</p>
                 </div>
-            {% endfor %}
-        {% else %}
-               <p>No questions yet! Come back later once you have created the survey.</p>
-               <p>You can create your survey <a href="/editor">here</a>.</p>
-        {% endif %}
-        <div class="btn-section">
-            <p> This cannot be submitted</p>
-        </div>
 
+            </div>
         </div>
     {% else %}
-    <h1>My Survey</h1>
+    <h1>Survey</h1>
+    <p>Please complete this anonymous survey and don't forget to hit submit at the bottom once you're finished.</p>
     <form  action= "/" method="post">
         {% csrf_token %}
         <div class="survey">
             
             {% for row in questions %}
-            <input type="hidden" name="asker" value="{{row.asker.id}}">
-                <p class="question">{{row.number}}. {{ row.question }}</p>
-                <div class="aligner">
+                <div class="question-container">
+                    <input type="hidden" name="asker" value="{{row.asker.id}}">
+                    <p class="question">{{row.number}}. {{ row.question }}</p>
+                    <div class="aligner">
 
-                {% if row.type >= 1 %}
-
-                    <label for="option{{row.number}}.1"><input type="radio" id="option{{row.number}}.1" name="{{row.number}}" value="{{row.ans1}}" /> {{row.ans1}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 2 %}
-                    <label for="option{{row.number}}.2"><input type="radio" id="option{{row.number}}.2" name="{{row.number}}" value="{{row.ans2}}" /> {{row.ans2}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 3 %}
-                    <label for="option{{row.number}}.3"><input type="radio" id="option{{row.number}}.3" name="{{row.number}}" value="{{row.ans3}}" /> {{row.ans3}}</label>
-                    <br>
-               {% endif %}
-                {% if row.type >= 4 %}
-                    <label for="option{{row.number}}.4"><input type="radio" id="option{{row.number}}.4" name="{{row.number}}" value="{{row.ans4}}" /> {{row.ans4}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 5 %}
-                    <label for="option{{row.number}}.5"><input type="radio" id="option{{row.number}}.5" name="{{row.number}}" value="{{row.ans5}}" /> {{row.ans5}}</label>
-                    <br>
-                {% endif %}
-                {% if row.type >= 6 %}
-                    <label for="option{{row.number}}.6"><input type="radio" id="option{{row.number}}.6" name="{{row.number}}" value="{{row.ans6}}" /> {{row.ans6}}</label>
-                    <br>
-               {% endif %}
-
-                <p></p>
+                    {% if row.type >= 1 %}
+                        <label for="option{{row.number}}.1"><input type="radio" id="option{{row.number}}.1" name="{{row.number}}" value="{{row.ans1}}" /> {{row.ans1}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 2 %}
+                        <label for="option{{row.number}}.2"><input type="radio" id="option{{row.number}}.2" name="{{row.number}}" value="{{row.ans2}}" /> {{row.ans2}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 3 %}
+                        <label for="option{{row.number}}.3"><input type="radio" id="option{{row.number}}.3" name="{{row.number}}" value="{{row.ans3}}" /> {{row.ans3}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 4 %}
+                        <label for="option{{row.number}}.4"><input type="radio" id="option{{row.number}}.4" name="{{row.number}}" value="{{row.ans4}}" /> {{row.ans4}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 5 %}
+                        <label for="option{{row.number}}.5"><input type="radio" id="option{{row.number}}.5" name="{{row.number}}" value="{{row.ans5}}" /> {{row.ans5}}</label>
+                        <br>
+                    {% endif %}
+                    {% if row.type >= 6 %}
+                        <label for="option{{row.number}}.6"><input type="radio" id="option{{row.number}}.6" name="{{row.number}}" value="{{row.ans6}}" /> {{row.ans6}}</label>
+                        <br>
+                    {% endif %}
+                    </div>
+                    
                 </div>
 
             {% endfor %}

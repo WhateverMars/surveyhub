@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded',() => {
     document.querySelector('#registerBtn').disabled = true
 
     // disable password field initially
+    document.querySelector('#email').disabled = true
+
+    // disable password fields initially
     document.querySelector('#password').disabled = true
     document.querySelector('#confirmation').disabled = true
     
@@ -67,6 +70,16 @@ document.addEventListener('DOMContentLoaded',() => {
 
         // if username is not blank unlock password form
         if(document.querySelector('#username').value != ''){
+            document.querySelector('#email').disabled = false
+        }else{
+            document.querySelector('#email').disabled = true
+        }
+    }
+
+    document.querySelector('#email').onkeyup = () => {
+
+        // if username is not blank unlock password form
+        if(document.querySelector('#email').value != ''){
             document.querySelector('#password').disabled = false
         }else{
             document.querySelector('#password').disabled = true
@@ -75,21 +88,18 @@ document.addEventListener('DOMContentLoaded',() => {
 
     document.querySelector('#password').onkeyup = () => {
 
-        // if username is not blank unlock password form
-        if(document.querySelector('#password').value.length >= 8){
+        let password = document.querySelector('#password').value
+        checkPassword(password)
+
+        // if password is large enough unlock confirmation form
+        if(checkPassword(password)){
             document.querySelector('#confirmation').disabled = false
         }else{
             document.querySelector('#confirmation').disabled = true
         }
     }
     
-    document.querySelector('#password').onkeyup = () => {
-
-        let password = document.querySelector('#password').value
-        checkPassword(password)
-
-    }
-
+    
     document.querySelector('#confirmation').onkeyup = () => {
 
         if(document.querySelector('#username') != '' && checkPassword(document.querySelector('#password').value) && document.querySelector('#confirmation').value == document.querySelector('#password').value){
