@@ -9,7 +9,7 @@
     <form class="form" action="/editor" method="get">
         <div class="labeled">
             <label for="noquestions">Number of questions:</label>
-            <input autocomplete="off" autofocus class="form-control" id="noquestions" placeholder="How many questions?" type="number" name="noquestions" min="0" {% if users_no_questions %} value="{{users_no_questions}}" {% endif %}>
+            <input autocomplete="off" autofocus class="form-control" id="noquestions" placeholder=1 type="number" name="noquestions" min="1" {% if users_no_questions %} value="{{users_no_questions}}" {% endif %}>
         </div>
         <input class="btn btn-primary btn-sm" type="submit" value="Set number of questions">
     </form>
@@ -19,42 +19,48 @@
         {% if questions %}
             <p>This is your survey</p>
             <!--This autofills in old questions if they exist-->
-            {% for row in questions %}
-
-                <div class="question-container">
-                    <div class="question-text labeled">
-                        Q{{row.number}}. <input autocomplete="off" autofocus class="" name="q{{ row.number }}" placeholder="Type in your question {{ row.number }} here" type="text" value="{{row.question}}">
+            <div class="question-section">
+                {% for row in questions %}
+                    <div class="question-container">
+                        <div class="question-text labeled">
+                            <label for="Q{{row.number}}">Q{{row.number}}.</label>
+                            <input autocomplete="off" autofocus class="form-control" name="q{{ row.number }}" placeholder="Type in your question {{ row.number }} here" type="text" value="{{row.question}}">
+                        </div>
+                        <div class="answer-container">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a1" placeholder="Answer 1" type="text" value="{{row.ans1}}">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a2" placeholder="Answer 2" type="text" value="{{row.ans2}}">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a3" placeholder="Answer 3(optional)" type="text" {% if row.ans3 and row.type >= 3 %} value="{{row.ans3}}" {% endif %}>
+                        </div>
+                        <div class="answer-container">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a4" placeholder="Answer 4(optional)" type="text" {% if row.ans4 and row.type >= 4 %} value="{{row.ans4}}" {% endif %}>
+                            <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a5" placeholder="Answer 5(optional)" type="text" {% if row.ans5 and row.type >= 5 %} value="{{row.ans5}}" {% endif %}>
+                            <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a6" placeholder="Answer 6(optional)" type="text" {% if row.ans6 and row.type >= 6 %} value="{{row.ans6}}" {% endif %}>
+                        </div>
                     </div>
-                    <div class="answer-container">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a1" placeholder="Answer 1" type="text" value="{{row.ans1}}">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a2" placeholder="Answer 2" type="text" value="{{row.ans2}}">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a3" placeholder="Answer 3(optional)" type="text" {% if row.ans3 and row.type >= 3 %} value="{{row.ans3}}" {% endif %}>
-                        <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a4" placeholder="Answer 4(optional)" type="text" {% if row.ans4 and row.type >= 4 %} value="{{row.ans4}}" {% endif %}>
-                        <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a5" placeholder="Answer 5(optional)" type="text" {% if row.ans5 and row.type >= 5 %} value="{{row.ans5}}" {% endif %}>
-                        <input autocomplete="off" autofocus class="form-control" name="q{{row.number}}a6" placeholder="Answer 6(optional)" type="text" {% if row.ans6 and row.type >= 6 %} value="{{row.ans6}}" {% endif %}>
-                    </div>
-                </div>
 
-            {% endfor %}
+                {% endfor %}
 
-            <!--This adds new questions if the user selects to add more-->
-            {% for n in range_existing %}
-
-                <div class="question-container">
-                    <p>This is a new question</p>
-                    <div class="question-text labeled">
-                        Q{{n}}. <input autocomplete="off" autofocus class="" name="q{{ n }}" placeholder="Type in your question {{ n }} here" type="text">
-                    </div>
-                    <div class="answer-container">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{n}}a1" placeholder="Answer 1" type="text">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{n}}a2" placeholder="Answer 2" type="text">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{n}}a3" placeholder="Answer 3(optional)" type="text">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{n}}a4" placeholder="Answer 4(optional)" type="text">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{n}}a5" placeholder="Answer 5(optional)" type="text">
-                        <input autocomplete="off" autofocus class="form-control" name="q{{n}}a6" placeholder="Answer 6(optional)" type="text">
-                    </div>
-                </div>    
-            {% endfor %}
+                <!--This adds new questions if the user selects to add more-->
+                {% for n in range_existing %}
+                    <div class="question-container">
+                        <!--<p>This is a new question</p>-->
+                        <div class="question-text labeled">
+                            <label for="q{{ n }}">Q{{n}}.</label>
+                            <input autocomplete="off" autofocus class="form-control" name="q{{ n }}" placeholder="Type in your question {{ n }} here" type="text">
+                        </div>
+                        <div class="answer-container">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{n}}a1" placeholder="Answer 1" type="text">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{n}}a2" placeholder="Answer 2" type="text">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{n}}a3" placeholder="Answer 3(optional)" type="text">
+                        </div>
+                        <div class="answer-container">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{n}}a4" placeholder="Answer 4(optional)" type="text">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{n}}a5" placeholder="Answer 5(optional)" type="text">
+                            <input autocomplete="off" autofocus class="form-control" name="q{{n}}a6" placeholder="Answer 6(optional)" type="text">
+                        </div>
+                    </div>    
+                {% endfor %}
+            </div>
                 
         {% else %}
 
@@ -66,7 +72,8 @@
                 {% for n in range_new %}
                     <div class="question-container">
                         <div class="question-text labeled">
-                            Q{{n}}. <input autocomplete="off" autofocus class="" name="q{{ n }}" placeholder="Type in your question {{ n }} here" type="text">
+                            <label for="q{{ n }}">Q{{n}}.</label>
+                            <input autocomplete="off" autofocus class="form-control" name="q{{ n }}" placeholder="Type in your question {{ n }} here" type="text">
                         </div>
                         <div class="answer-container">
                             <input autocomplete="off" autofocus class="form-control" name="q{{n}}a1" placeholder="Answer 1" type="text">
@@ -82,9 +89,6 @@
                 {% endfor %}
             </div>
         {% endif %}
-
-        <br>
         <button class="btn btn-primary" type="submit">Save Survey</button>
     </form>
-    <p></p>
 {% endblock %}
