@@ -8,7 +8,8 @@ body{
 
 header{
     background-color: rgba(0, 122, 20, 0.678);
-    box-shadow: 1px 1px 5px #4e4e4e
+    box-shadow: 1px 1px 5px #4e4e4e;
+    border-bottom: 1px solid #4e4e4e;
 }
 
 .nav-bar{
@@ -81,6 +82,7 @@ h2{
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    text-align: center;
 }
 
 #account-section{

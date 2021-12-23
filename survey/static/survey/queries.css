@@ -1,4 +1,4 @@
-@media screen and (max-width: 400px){
+@media screen and (max-width: 450px){
     
     .nav-bar{
         display: flex;
@@ -8,7 +8,8 @@
     }
 
     .nav-right{
-        width: 90%;
+        width: 100%;
+        justify-content: space-evenly;
     }
 
     .logo{
