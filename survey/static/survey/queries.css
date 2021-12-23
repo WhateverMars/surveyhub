@@ -1,0 +1,30 @@
+@media screen and (max-width: 400px){
+    header{
+        background-color: chocolate;
+    }
+    .nav-bar{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0
+    }
+
+    .nav-right{
+        width: 90%;
+    }
+
+    .logo{
+        max-width: 70%;
+        margin-top: 5px;
+        margin: auto;
+    }
+
+    .question-text{
+        width: 100%;
+    }
+
+    .answer-container{
+        flex-direction: column;
+        width: 90%;
+    }
+}
