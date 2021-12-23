@@ -52,7 +52,7 @@ def index(request):
             if request.user.is_authenticated:
                 return account(request)
             else:
-                return alert(request, "Surveyhub", "If you would like to create a survey please click on the account tab to login or register.")
+                return alert(request, "QuestioNet", "If you would like to create a survey please click on the account tab to login or register.")
 
         # give questions
         
