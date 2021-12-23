@@ -1,7 +1,5 @@
 @media screen and (max-width: 400px){
-    header{
-        background-color: chocolate;
-    }
+    
     .nav-bar{
         display: flex;
         flex-direction: column;

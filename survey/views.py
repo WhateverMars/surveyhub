@@ -56,7 +56,7 @@ def index(request):
 
         # give questions
         
-        questions = Question.objects.filter(asker = surveyer.user.id)
+        questions = Question.objects.filter(asker = surveyer.user.id, number__lte = surveyer.questions)
 
         return render(request, "survey/index.html", {
             'questions' : questions
