@@ -1,4 +1,4 @@
-# QuestioNet (previosly surveyhub)
+# QuestioNet (previously surveyhub)
 
 This is QuestioNet, a site for creating and sharing custom surveys. It is currently a fully functional but will receive additional updates. I am currently readying it for server stage production and will host it on pythonanywhere.
 ![Survey Editor page](/images/welcomepage.jpg)
