@@ -54,6 +54,11 @@ def index(request):
             else:
                 return alert(request, "QuestioNet", "If you would like to create a survey please click on the account tab to login or register.")
 
+        # if user gets a survey from someone else
+        if surveyer != request.user:
+            logout(request)
+
+
         # give questions
         
         questions = Question.objects.filter(asker = surveyer.user.id, number__lte = surveyer.questions)
