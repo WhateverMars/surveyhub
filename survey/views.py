@@ -55,7 +55,6 @@ def index(request):
                 return alert(request, "QuestioNet", "If you would like to create a survey please click on the account tab to login or register.")
 
         # give questions
-        
         questions = Question.objects.filter(asker = surveyer.user.id, number__lte = surveyer.questions)
 
         return render(request, "survey/index.html", {
@@ -115,7 +114,6 @@ def register(request):
         confirmation = request.POST["confirmation"]
         link = random_string(10)
 
-        '''
         # check if the passwords match
         if password != confirmation:
             return render(request, "survey/register.html", {
@@ -127,7 +125,7 @@ def register(request):
             return render(request, "survey/register.html", {
                 "message": "Invalid Username."
             })
-        '''
+        
         # Attempt to create new user in both the user and surveyer models. These are then linked.
         try:
             user = User.objects.create_user(username, email, password)
@@ -251,8 +249,12 @@ def results(request):
         return alert(request, "No results yet.","Check back later once your survey has been answered.")
 
     # write the results to a csv file.
+
+    # swap below statements when deploying to pythonanywhere or running locally
     with open("survey/static/results"+ str(request.user.id) +".csv", 'w') as csvfile:
 
+    #with open("/home/QuestioNet/surveyhub/survey/static/results"+ str(request.user.id) +".csv", 'w') as csvfile:
+        
         # creating a csv writer object
         writer = csv.writer(csvfile)
 
