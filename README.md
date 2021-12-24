@@ -1,6 +1,6 @@
-# QuestioNet (previosly surbeyhub)
+# QuestioNet (previosly surveyhub)
 
-This is QuestioNet a site for creating and sharing custom surveys. It is currently a fully functional but will receive additional updates. I am currently readying it for server stage production and will host it on pythonanywhere.
+This is QuestioNet, a site for creating and sharing custom surveys. It is currently a fully functional but will receive additional updates. I am currently readying it for server stage production and will host it on pythonanywhere.
 ![Survey Editor page](/images/welcomepage.jpg)
 
 This site is built primarily in Python using the Django framework. It uses sqlite to manage the database of surveys, results and user accounts. It uses html and css for the webpages and JavaScript to add some dynamic functions to pages such as login and registration functions.

@@ -194,7 +194,7 @@ footer{
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: calc(var(--vw, 1vw) * 100);
+    gap: calc(var(--vw, 1vw) * 10);
     padding: 8px;
     text-shadow: 1px 1px black;
 }
