@@ -50,10 +50,6 @@ header{
     text-shadow: 1px 1px #000000cf;
 }
 
-.nav-left{
-    font-size: 48px;
-    text-decoration: none;
-}
 
 .nav-right{
     display: flex;
