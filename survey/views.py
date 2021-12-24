@@ -251,7 +251,7 @@ def results(request):
         return alert(request, "No results yet.","Check back later once your survey has been answered.")
 
     # write the results to a csv file.
-    with open("survey/static/results"+ str(request.user.id) +".csv", 'w') as csvfile:
+    with open("/home/QuestioNet/surveyhub/survey/static/results"+ str(request.user.id) +".csv", 'w') as csvfile:
 
         # creating a csv writer object
         writer = csv.writer(csvfile)

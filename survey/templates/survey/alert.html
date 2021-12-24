@@ -1,7 +1,7 @@
 {% extends "survey/layout.html" %}
 
 {% block head %}
-    Surveyhub
+    QuestioNet
 {% endblock %}
 
 {% block body %}
@@ -27,7 +27,7 @@
         <div>
             <p>Use the below link to share your survey:</p>
         <!--If hosting on pythonanywhere-->    
-            <p><a href="questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}">questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}</a></p>
+            <p><a href="http://questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}">http://questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}</a></p>
         <!--otherwise uncomment below-->
         <!--<p><a href="http://127.0.0.1:8000/?id={{request.user.surveyer.link}}">http://127.0.0.1:8000/?id={{request.user.surveyer.link}}</a></p>-->
         </div>
