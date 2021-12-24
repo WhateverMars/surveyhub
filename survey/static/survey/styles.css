@@ -3,7 +3,10 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    
     height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    
 }
 
 header{
@@ -20,11 +23,11 @@ header{
     display: flex;
     justify-content: space-around;
     /* max-width: 960px; */
-    height: 20vh;
+    height: calc(var(--vh, 1vh) * 20);
     max-height: 100px;
     margin: 0 auto;
     align-items: center;
-    gap: 2vw;
+    gap: calc(var(--vw, 1vw) * 2);
     
 }
 
@@ -34,7 +37,7 @@ header{
 
 .logo img{
     height: 80%;
-    max-height: 18vh;
+    max-height: calc(var(--vh, 1vh) * 18);
     max-width: 300px;
     border-radius: 16px;
     padding: 2px;
@@ -56,7 +59,7 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 2vw;
+    gap: calc(var(--vw, 1vw) * 2);
     text-align: center;
 }
 
@@ -65,8 +68,8 @@ header{
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
-    gap: 5vh;
-    margin: 5vw; /*was 10vw testing at 5vw */
+    gap: calc(var(--vh, 1vh) * 5);
+    margin: calc(var(--vw, 1vw) * 5); /*was 10vw testing at 5vw */
 
     border: 1px solid green;
     border-radius: 16px;
@@ -90,7 +93,7 @@ h2{
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    gap: 1vh;
+    gap: var(--vh, 1vh);
 }
 
 .form{
@@ -99,7 +102,7 @@ h2{
     align-items: center;
     justify-content: space-around;
     text-align: center;
-    gap: 1vh;
+    gap: var(--vh, 1vh);
     width: 100%;
 }
 
@@ -160,7 +163,7 @@ label{
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 1vh;
+    gap: var(--vh, 1vh);
     width: 80%;
 }
 
@@ -168,7 +171,7 @@ label{
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 1vh;
+    gap: var(--vh, 1vh);
     width: 80%;
 }
 
@@ -191,7 +194,7 @@ footer{
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 10vw;
+    gap: calc(var(--vw, 1vw) * 100);
     padding: 8px;
     text-shadow: 1px 1px black;
 }
