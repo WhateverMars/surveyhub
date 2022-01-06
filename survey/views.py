@@ -116,11 +116,11 @@ def register(request):
         # take in the posted data
         username = request.POST["username"]
         password = request.POST["password"]
-        email = request.POST["password"]
+        email = request.POST["email"]
         confirmation = request.POST["confirmation"]
         link = random_string(10)
 
-        '''
+        
         # check if the passwords match
         if password != confirmation:
             return render(request, "survey/register.html", {
@@ -132,7 +132,7 @@ def register(request):
             return render(request, "survey/register.html", {
                 "message": "Invalid Username."
             })
-        '''
+        
         # Attempt to create new user in both the user and surveyer models. These are then linked.
         try:
             user = User.objects.create_user(username, email, password)
