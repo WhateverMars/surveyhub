@@ -55,7 +55,7 @@ def index(request):
                 return alert(request, "QuestioNet", "If you would like to create a survey please click on the account tab to login or register.")
 
         # if user gets a survey from someone else
-        if surveyer != request.user:
+        if surveyer.user.username != request.user.username:
             logout(request)
 
 

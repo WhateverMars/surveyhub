@@ -9,7 +9,7 @@
     <form class="form" action="/editor" method="get">
         <div class="labeled">
             <label for="noquestions">Number of questions:</label>
-            <input autocomplete="off" autofocus class="form-control" id="noquestions" placeholder=1 type="number" name="noquestions" min="1" {% if users_no_questions %} value="{{users_no_questions}}" {% endif %}>
+            <input autocomplete="off" autofocus class="form-control" id="noquestions" placeholder=1 type="number" name="noquestions" min="1" {% if users_no_questions %} value="{{users_no_questions}}" {% else %} value="1" {% endif %}>
         </div>
         <input class="btn btn-primary btn-sm" type="submit" value="Set number of questions">
     </form>
