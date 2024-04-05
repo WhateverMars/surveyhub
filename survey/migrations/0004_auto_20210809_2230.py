@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="surveyer",
+            model_name="surveyor",
             name="id",
         ),
         migrations.AlterField(
-            model_name="surveyer",
+            model_name="surveyor",
             name="user",
             field=models.OneToOneField(
                 on_delete=django.db.models.deletion.CASCADE,
