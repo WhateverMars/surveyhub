@@ -1,33 +1,40 @@
-{% extends "survey/layout.html" %}
+{% extends "survey/layout.html" %} {% block head %} Account {% endblock %} {%
+block body %} {% load static %}
+<script src="{% static 'survey/loginCheck.js' %}"></script>
+<div id="message-section">
+  <h1>Account</h1>
+  <p>Log in to set questions</p>
+  {% if message %}
+  <div>{{ message }}</div>
+  {% endif %}
+</div>
 
-{% block head %}
-    Account
-{% endblock %}
-
-{% block body %}
-    {% load static %}
-    <script src="{% static 'survey/loginCheck.js' %}"></script>
-    <div id="message-section">
-        <h1>Account</h1>
-        <p>Log in to set questions</p>
-        {% if message %}
-            <div>{{ message }}</div>
-        {% endif %}
-    </div>
-    
-    
-    <form class="form" action="/account" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autocomplete="off" autofocus id="username" class="form-control" name="username" placeholder="Username" type="text">
-        </div>
-        <div class="form-group">
-            <input id="password" class="form-control" name="password" placeholder="Password" type="password">
-        </div>
-        <button id="loginBtn" class="btn btn-primary" type="submit">Log In</button>
-    </form>
-    <form class="form" action="/register">
-        {% csrf_token %}
-        <button class="btn btn-primary" type="submit">Register</button>
-    </form>
+<form class="form" action="/account" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <input
+      autocomplete="off"
+      autofocus
+      id="username"
+      class="form-control"
+      name="username"
+      placeholder="Username"
+      type="text"
+    />
+  </div>
+  <div class="form-group">
+    <input
+      id="password"
+      class="form-control"
+      name="password"
+      placeholder="Password"
+      type="password"
+    />
+  </div>
+  <button id="loginBtn" class="btn btn-primary" type="submit">Log In</button>
+</form>
+<form class="form" action="/register">
+  {% csrf_token %}
+  <button class="btn btn-primary" type="submit">Register</button>
+</form>
 {% endblock %}

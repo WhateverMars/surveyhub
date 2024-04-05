@@ -1,100 +1,92 @@
-@media only screen and (max-width:1200px)
-{
-    .nav{
-        padding:10px;
-    }
+@media only screen and (max-width: 1200px) {
+  .nav {
+    padding: 10px;
+  }
 
-    h1{
-        font-size:60px;
-    }
-    .nav-item{
-        vertical-align: middle;
-    }
+  h1 {
+    font-size: 60px;
+  }
+  .nav-item {
+    vertical-align: middle;
+  }
 
-    button{
-        margin-left:0%;
-    }
+  button {
+    margin-left: 0%;
+  }
 }
 
-@media only screen and (max-width:1023px)
-{
-    button{
-        margin-left:0%;
-    }
+@media only screen and (max-width: 1023px) {
+  button {
+    margin-left: 0%;
+  }
 
-    .divides{
-    width:80%;
+  .divides {
+    width: 80%;
     display: list-item;
     padding: 40px;
-    margin:auto;
+    margin: auto;
     font-size: 120%;
-    }
+  }
 
-    .survey{
-    margin-left:4%;
-    margin-right:4%;
-    text-align:center;
+  .survey {
+    margin-left: 4%;
+    margin-right: 4%;
+    text-align: center;
     text-transform: none;
     padding: 0;
-    }
-
+  }
 }
 
-@media only screen and (max-width:767px)
-{
-    body{
-        overflow-x: hidden;
-    }
+@media only screen and (max-width: 767px) {
+  body {
+    overflow-x: hidden;
+  }
 
-    button{
-        margin-left:0%;
-    }
+  button {
+    margin-left: 0%;
+  }
 
-    .divides{
-        display: flex;
-    }
+  .divides {
+    display: flex;
+  }
 
-    .nav{
-        padding: 2px;
-    }
+  .nav {
+    padding: 2px;
+  }
 
-    .nav-item{
-        padding:0px;
-    }
+  .nav-item {
+    padding: 0px;
+  }
 
-    h1{
-        margin:auto;
-        font-size: 40px;
-    }
-    .subhead{
-        padding:5%;
-    }
+  h1 {
+    margin: auto;
+    font-size: 40px;
+  }
+  .subhead {
+    padding: 5%;
+  }
 
-    #pwRequirements{
-        list-style: square inside;
-        margin: 0 25%;
-    }
+  #pwRequirements {
+    list-style: square inside;
+    margin: 0 25%;
+  }
 }
 
-@media only screen and (max-width:480px)
-{
-    button{
-        margin-left:0%;
+@media only screen and (max-width: 480px) {
+  button {
+    margin-left: 0%;
+  }
 
-    }
+  .nav {
+    display: flex;
+  }
 
-    .nav{
-        display:flex;
-    }
+  .nav-item {
+    font-size: 100%;
+  }
 
-    .nav-item{
-        font-size:100%;
-
-    }
-
-    #pwRequirements{
-        list-style: square inside;
-        margin: 0 15%;
-    }
-
+  #pwRequirements {
+    list-style: square inside;
+    margin: 0 15%;
+  }
 }

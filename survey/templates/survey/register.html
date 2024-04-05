@@ -1,41 +1,64 @@
-{% extends "survey/layout.html" %}
+{% extends "survey/layout.html" %} {% block head %} register {% endblock %} {%
+block body %} {% load static %}
+<script src="{% static 'survey/registrationCheck.js' %}"></script>
+<div id="message-section">
+  <h1>Registration</h1>
+  <p>Set up an account to create and share surveys</p>
+  {% if message %}
+  <div>{{ message }}</div>
+  {% endif %}
+</div>
 
-{% block head %}
-    register
-{% endblock %}
+<form class="form" action="/register" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <input
+      autocomplete="off"
+      autofocus
+      class="form-control"
+      id="username"
+      name="username"
+      placeholder="Username"
+      type="text"
+    />
+  </div>
+  <div class="form-group">
+    <input
+      autocomplete="off"
+      class="form-control"
+      id="email"
+      name="email"
+      placeholder="email address"
+      type="email"
+    />
+  </div>
+  <div class="form-group">
+    <input
+      class="form-control"
+      id="password"
+      name="password"
+      placeholder="Password"
+      type="password"
+    />
+  </div>
+  <div class="form-group">
+    <input
+      class="form-control"
+      id="confirmation"
+      name="confirmation"
+      placeholder="Confirm Password"
+      type="password"
+    />
+  </div>
+  <button class="btn btn-primary" id="registerBtn" type="submit">
+    Register
+  </button>
 
-{% block body %}
-    {% load static %}
-    <script src="{% static 'survey/registrationCheck.js' %}"></script>
-    <div id="message-section">
-    <h1>Registration</h1>
-    <p>Set up an account to create and share surveys</p>
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-    </div>
-
-    <form class="form" action="/register" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Username" type="text">
-        </div>
-        <div class="form-group">
-            <input autocomplete="off" class="form-control" id="email" name="email" placeholder="email address" type="email">
-        </div>
-        <div class="form-group">
-            <input class="form-control" id="password" name="password" placeholder="Password" type="password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" id="confirmation" name="confirmation" placeholder="Confirm Password" type="password">
-        </div>
-        <button class="btn btn-primary" id="registerBtn" type="submit">Register</button>
-    
-        <ul id="pwRequirements">
-            <li id="ReqLen" hidden>Password must be at least 8 characters.</li>
-            <li id="ReqUpper" hidden>Password must contain 1 upper case character.</li>
-            <li id="ReqLower" hidden>Password must contain 1 lower case character.</li>
-            <li id="ReqMatch" hidden>Passwords must match</li>
-        </ul>
-    </form>
+  <ul id="pwRequirements">
+    <li id="ReqLen" hidden>Password must be at least 8 characters.</li>
+    <li id="ReqUpper" hidden>Password must contain 1 upper case character.</li>
+    <li id="ReqLower" hidden>Password must contain 1 lower case character.</li>
+    <li id="ReqMatch" hidden>Passwords must match</li>
+  </ul>
+</form>
 {% endblock %}

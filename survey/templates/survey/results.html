@@ -1,98 +1,146 @@
-{% extends "survey/layout.html" %}
-{% load mathfilters %}
-{% block head %}
-    Results
-{% endblock %}
+{% extends "survey/layout.html" %} {% load mathfilters %} {% block head %}
+Results {% endblock %} {% block body %}
+<h1>Results</h1>
+<p>Number of people surveyed: {{surveyed}}</p>
+<div class="results-section">
+  {% for row in analysis %}
 
-{% block body %}
-    <h1>Results</h1>
-    <p>Number of people surveyed: {{surveyed}}</p>
-    <div class="results-section">
-        {% for row in analysis %}
+  <ul class="list-group">
+    <li class="list-group-item list-group-item-dark">
+      Q{{row.number}}. {{row.question}}
+    </li>
+    {% if row.ans1count != 0 %}
+    <li class="list-group-item">
+      <div class="progress" style="height: 40px">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{ 100|mul:row.ans1count|div:row.userstot }}%"
+          aria-valuenow="{{row.ans1count}}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          {{row.ans1}}: {{row.ans1count}}
+        </div>
+      </div>
+    </li>
+    {% endif %} {% if row.ans2count != 0 %}
+    <li class="list-group-item">
+      <div class="progress" style="height: 40px">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{ 100|mul:row.ans2count|div:row.userstot }}%"
+          aria-valuenow="{{row.ans2count}}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          {{row.ans2}}: {{row.ans2count}}
+        </div>
+      </div>
+    </li>
+    {% endif %} {% if row.ans3count != 0 %}
+    <li class="list-group-item">
+      <div class="progress" style="height: 40px">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{ 100|mul:row.ans3count|div:row.userstot }}%"
+          aria-valuenow="{{row.ans3count}}"
+          aria-valuemin="0"
+          aria-valuemax="{{row.userstot}}"
+        >
+          {{row.ans3}}: {{row.ans3count}}
+        </div>
+      </div>
+    </li>
+    {% endif %} {% if row.ans4count != 0 %}
+    <li class="list-group-item">
+      <div class="progress" style="height: 40px">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{ 100|mul:row.ans4count|div:row.userstot }}%"
+          aria-valuenow="{{row.ans4count}}"
+          aria-valuemin="0"
+          aria-valuemax="{{row.userstot}}"
+        >
+          {{row.ans4}}: {{row.ans4count}}
+        </div>
+      </div>
+    </li>
+    {% endif %} {% if row.ans5count != 0 %}
+    <li class="list-group-item">
+      <div class="progress" style="height: 40px">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{ 100|mul:row.ans5count|div:row.userstot }}%"
+          aria-valuenow="{{row.ans5count}}"
+          aria-valuemin="0"
+          aria-valuemax="{{row.userstot}}"
+        >
+          {{row.ans5}}: {{row.ans5count}}
+        </div>
+      </div>
+    </li>
+    {% endif %} {% if row.ans6count != 0 %}
+    <li class="list-group-item">
+      <div class="progress" style="height: 40px">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{ 100|mul:row.ans6count|div:row.userstot }}%"
+          aria-valuenow="{{row.ans6count}}"
+          aria-valuemin="0"
+          aria-valuemax="{{row.userstot}}"
+        >
+          {{row.ans6}}: {{row.ans6count}}
+        </div>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+  {% endfor %}
+</div>
+<h1>Full data</h1>
 
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-dark">Q{{row.number}}. {{row.question}}</li>
-            {% if row.ans1count != 0 %}
-            <li class="list-group-item">
-                <div class="progress" style="height: 40px;">
-                    <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans1count|div:row.userstot }}%" aria-valuenow="{{row.ans1count}}" aria-valuemin="0" aria-valuemax="100">{{row.ans1}}: {{row.ans1count}}</div>
-                </div>
-            </li>
-            {% endif %}
-            {% if row.ans2count != 0 %}
-            <li class="list-group-item">
-                <div class="progress" style="height: 40px;">
-                    <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans2count|div:row.userstot }}%" aria-valuenow="{{row.ans2count}}" aria-valuemin="0" aria-valuemax="100">{{row.ans2}}: {{row.ans2count}}</div>
-                </div>
-            </li>
-            {% endif %}
-            {% if row.ans3count != 0 %}
-            <li class="list-group-item">
-                <div class="progress" style="height: 40px;">
-                    <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans3count|div:row.userstot }}%" aria-valuenow="{{row.ans3count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans3}}: {{row.ans3count}}</div>
-                </div>
-            </li>
-            {% endif %}
-            {% if row.ans4count != 0 %}
-            <li class="list-group-item">
-                <div class="progress" style="height: 40px;">
-                    <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans4count|div:row.userstot }}%" aria-valuenow="{{row.ans4count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans4}}: {{row.ans4count}}</div>
-                </div>
-            </li>
-            {% endif %}
-            {% if row.ans5count != 0 %}
-            <li class="list-group-item">
-                <div class="progress" style="height: 40px;">
-                    <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans5count|div:row.userstot }}%" aria-valuenow="{{row.ans5count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans5}}: {{row.ans5count}}</div>
-                </div>
-            </li>
-            {% endif %}
-            {% if row.ans6count != 0 %}
-            <li class="list-group-item">
-                <div class="progress" style="height: 40px;">
-                    <div class="progress-bar" role="progressbar" style="width: {{ 100|mul:row.ans6count|div:row.userstot }}%" aria-valuenow="{{row.ans6count}}" aria-valuemin="0" aria-valuemax="{{row.userstot}}">{{row.ans6}}: {{row.ans6count}}</div>
-                </div>
-            </li>
-            {% endif %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Q#</th>
+      <th>Question</th>
+      <th>Answer</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr></tr>
+  </tfoot>
+  <tbody>
+    {% for row in results %}
+    <tr>
+      <td>{{ row.user }}</td>
+      <td>{{ row.number }}</td>
+      <td>{{ row.question }}</td>
+      <td>{{ row.answer }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-        </ul>
-        {% endfor %}
-    </div>
-    <h1>Full data</h1>
+<p class="centering">
+  <a
+    class="btn btn-primary"
+    type="button"
+    href="/static/results{{request.user.id}}.csv"
+    download="results.csv"
+    >Export</a
+  >
+</p>
 
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Q#</th>
-                <th>Question</th>
-                <th>Answer</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-
-            </tr>
-        </tfoot>
-        <tbody>
-            {% for row in results %}
-            <tr>
-                <td>{{ row.user }}</td>
-                <td>{{ row.number }}</td>
-                <td>{{ row.question }}</td>
-                <td>{{ row.answer }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <p class="centering">
-        <a class="btn btn-primary" type="button" href="/static/results{{request.user.id}}.csv" download="results.csv">Export</a>
-    </p>
-
-    <form class="centering" action="/cleardata">
-        <button class="btn btn-danger" type="submit">DELETE ALL RESULTS</button>
-    </form>
-    <p></p>
+<form class="centering" action="/cleardata">
+  <button class="btn btn-danger" type="submit">DELETE ALL RESULTS</button>
+</form>
+<p></p>
 {% endblock %}

@@ -1,30 +1,28 @@
-@media screen and (max-width: 450px){
+@media screen and (max-width: 450px) {
+  .nav-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+  }
 
+  .nav-right {
+    width: 100%;
+    justify-content: space-evenly;
+  }
 
-    .nav-bar{
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        gap: 0
-    }
+  .logo {
+    max-width: 70%;
+    margin-top: 5px;
+    margin: auto;
+  }
 
-    .nav-right{
-        width: 100%;
-        justify-content: space-evenly;
-    }
+  .question-text {
+    width: 100%;
+  }
 
-    .logo{
-        max-width: 70%;
-        margin-top: 5px;
-        margin: auto;
-    }
-
-    .question-text{
-        width: 100%;
-    }
-
-    .answer-container{
-        flex-direction: column;
-        width: 90%;
-    }
+  .answer-container {
+    flex-direction: column;
+    width: 90%;
+  }
 }
