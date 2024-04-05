@@ -6,49 +6,49 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('survey', '0014_auto_20210816_1401'),
+        ("survey", "0014_auto_20210816_1401"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='analysis',
-            name='ans1count',
+            model_name="analysis",
+            name="ans1count",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='analysis',
-            name='ans2count',
+            model_name="analysis",
+            name="ans2count",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='analysis',
-            name='ans3count',
+            model_name="analysis",
+            name="ans3count",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='analysis',
-            name='ans4count',
+            model_name="analysis",
+            name="ans4count",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='analysis',
-            name='ans5count',
+            model_name="analysis",
+            name="ans5count",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='analysis',
-            name='ans6count',
+            model_name="analysis",
+            name="ans6count",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='analysis',
-            name='userstot',
+            model_name="analysis",
+            name="userstot",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),

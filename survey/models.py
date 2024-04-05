@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+
 class Surveyer(models.Model):
     user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     questions = models.IntegerField(default=0)
@@ -26,8 +27,9 @@ class Question(models.Model):
     ans6 = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.question}'
-    
+        return f"{self.question}"
+
+
 class Result(models.Model):
     asker = models.ForeignKey(User, on_delete=models.CASCADE)
     user = models.IntegerField()
@@ -37,7 +39,8 @@ class Result(models.Model):
     answer = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.answer}'
+        return f"{self.answer}"
+
 
 class Analysis(models.Model):
     asker = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -58,4 +61,4 @@ class Analysis(models.Model):
     ans6 = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.number: self.question}'
+        return f"{self.number: self.question}"

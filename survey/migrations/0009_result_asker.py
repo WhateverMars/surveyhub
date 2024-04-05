@@ -9,14 +9,16 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('survey', '0008_alter_question_type'),
+        ("survey", "0008_alter_question_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='result',
-            name='asker',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='auth.user'),
+            model_name="result",
+            name="asker",
+            field=models.ForeignKey(
+                default=0, on_delete=django.db.models.deletion.CASCADE, to="auth.user"
+            ),
             preserve_default=False,
         ),
     ]

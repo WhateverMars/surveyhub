@@ -9,17 +9,22 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('survey', '0003_auto_20210809_2155'),
+        ("survey", "0003_auto_20210809_2155"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='surveyer',
-            name='id',
+            model_name="surveyer",
+            name="id",
         ),
         migrations.AlterField(
-            model_name='surveyer',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL),
+            model_name="surveyer",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                serialize=False,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
