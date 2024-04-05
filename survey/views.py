@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Surveyer, User, Question, Result, Analysis
+from .models import Surveyor, User, Question, Result, Analysis
 from django.urls import reverse
 from django.db import IntegrityError
 from .util import random_string
@@ -17,12 +17,12 @@ def index(request):
     # if survey submitted
     if request.method == "POST":
 
-        # record the surveyer and calculate which number person surveyed this is
-        surveyer = Surveyer.objects.get(user=User(id=request.POST["asker"]))
+        # record the surveyor and calculate which number person surveyed this is
+        surveyor = Surveyor.objects.get(user=User(id=request.POST["asker"]))
 
-        noquestions = Surveyer.objects.get(user=surveyer).questions
+        noquestions = Surveyor.objects.get(user=surveyor).questions
 
-        users = Result.objects.filter(asker=surveyer.user).values("user").distinct()
+        users = Result.objects.filter(asker=surveyor.user).values("user").distinct()
 
         usernum = len(users) + 1
 
@@ -30,14 +30,14 @@ def index(request):
         for i in range(noquestions):
 
             number = i + 1
-            question = Question.objects.get(asker=surveyer.user, number=number)
+            question = Question.objects.get(asker=surveyor.user, number=number)
 
             # dynamically request answer
             answer = request.POST["%i" % (number)]
 
             # save results to db
             r = Result(
-                asker=surveyer.user,
+                asker=surveyor.user,
                 user=usernum,
                 number=number,
                 question=question.question,
@@ -50,11 +50,11 @@ def index(request):
         return alert(request, "Results saved", "Thank you")
 
     else:
-        # Checks which surveyer gave this user the survey.
-        surveyer = Surveyer.objects.filter(link=request.GET.get("id")).first()
+        # Checks which surveyor gave this user the survey.
+        surveyor = Surveyor.objects.filter(link=request.GET.get("id")).first()
 
         # if no id, present with homepage
-        if not surveyer:
+        if not surveyor:
             if request.user.is_authenticated:
                 return account(request)
             else:
@@ -65,13 +65,13 @@ def index(request):
                 )
 
         # if user gets a survey from someone else
-        if surveyer.user.username != request.user.username:
+        if surveyor.user.username != request.user.username:
             logout(request)
 
         # give questions
 
         questions = Question.objects.filter(
-            asker=surveyer.user.id, number__lte=surveyer.questions
+            asker=surveyor.user.id, number__lte=surveyor.questions
         )
 
         return render(request, "survey/index.html", {"questions": questions})
@@ -148,12 +148,12 @@ def register(request):
                 request, "survey/register.html", {"message": "Invalid Username."}
             )
 
-        # Attempt to create new user in both the user and surveyer models. These are then linked.
+        # Attempt to create new user in both the user and surveyor models. These are then linked.
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
-            surveyer = Surveyer(user=user, link=link)
-            surveyer.save()
+            surveyor = Surveyor(user=user, link=link)
+            surveyor.save()
         except IntegrityError:
             return render(
                 request, "survey/register.html", {"message": "Username already taken."}
@@ -178,7 +178,7 @@ def editor(request):
 
         # Continue loop while questions exist.
         i = 1
-        while i - 1 < Surveyer.objects.get(user=request.user.id).questions:
+        while i - 1 < Surveyor.objects.get(user=request.user.id).questions:
 
             # for cases where there is no question to be updated, add a new question entry
 
@@ -231,7 +231,7 @@ def editor(request):
             i += 1
 
         # set the number of questions the user has in their survey
-        s = Surveyer.objects.get(user=request.user.id)
+        s = Surveyor.objects.get(user=request.user.id)
         s.questions = i - 1
         s.save()
         return alert(request, "Questions saved.", "You can now share your survey.")
@@ -240,14 +240,14 @@ def editor(request):
 
         # check the GET to see how many questions the user wants
         if request.GET.get("noquestions"):
-            if Surveyer.objects.get(user=request.user.id).questions != int(
+            if Surveyor.objects.get(user=request.user.id).questions != int(
                 request.GET.get("noquestions")
             ):
                 noquestions = int(request.GET.get("noquestions"))
             else:
-                noquestions = Surveyer.objects.get(user=request.user.id).questions
+                noquestions = Surveyor.objects.get(user=request.user.id).questions
         else:
-            noquestions = Surveyer.objects.get(user=request.user.id).questions
+            noquestions = Surveyor.objects.get(user=request.user.id).questions
 
         # pass through previous questions for autofill from current survey
         questions = Question.objects.filter(
@@ -257,7 +257,7 @@ def editor(request):
         existing_questions = Question.objects.filter(asker=request.user.id).count()
 
         # update the number of questions for the user.
-        s = Surveyer.objects.get(user=request.user.id)
+        s = Surveyor.objects.get(user=request.user.id)
         s.questions = noquestions
         s.save()
 
@@ -315,7 +315,7 @@ def results(request):
 
     surveyed = Result.objects.filter(asker=request.user.id).last().user
 
-    noquestions = Surveyer.objects.get(user=request.user.id).questions
+    noquestions = Surveyor.objects.get(user=request.user.id).questions
 
     questions = Question.objects.filter(asker=request.user.id)
 

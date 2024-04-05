@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class Surveyer(models.Model):
+class Surveyor(models.Model):
     user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     questions = models.IntegerField(default=0)
     link = models.CharField(max_length=64)
