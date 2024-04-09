@@ -1,0 +1,20 @@
+# Django project files
+*.pyc
+*.pyo
+__pycache__/
+*.sqlite3
+
+# Static files
+/staticfiles/
+
+# Media files
+/media/
+
+# Virtual environment
+venv/
+
+# db.sqlite3
+db.sqlite3
+
+# results
+static/results/
