@@ -17,4 +17,4 @@ venv/
 db.sqlite3
 
 # results
-static/results/
+survey/static/results/
