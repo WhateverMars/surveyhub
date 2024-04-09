@@ -1,15 +1,14 @@
-from django.db.models import query
-from django.db.models.fields import EmailField
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+import csv
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Surveyer, User, Question, Result, Analysis
-from django.urls import reverse
 from django.db import IntegrityError
-from .util import random_string
-import random
-import csv
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+
+from survey.models import Surveyer, User, Question, Result, Analysis
+from survey.util import random_string
 
 
 def index(request):
@@ -83,7 +82,7 @@ def account(request):
     if request.user.is_authenticated:
         return alert(
             request,
-            "Welcome " + request.user.username + "!",
+            f"Welcome {request.user.username}!",
             "You can now create or edit surveys.",
         )
 
@@ -175,64 +174,58 @@ def logout_view(request):
 @login_required(login_url="/account")
 def editor(request):
     if request.method == "POST":
+        data = request.POST
 
-        # Continue loop while questions exist.
+        number_of_questions = max(
+            int(key[1:])
+            for key in data.keys()
+            if key.startswith("q") and key[1:].isdigit() and data[key]
+        )
+
+        # Structure data as a list of dictionaries
+        data = []
+        for i in range(1, number_of_questions + 1):
+            question_data = {}
+            for key, value in request.POST.items():
+                if key.startswith(f"q{i}"):
+                    if "a" in key:
+                        # Change the key to "ans1", "ans2", etc.
+                        answer_number = key.split("a")[1]
+                        question_data[f"ans{answer_number}"] = value
+                    else:
+                        question_data["question"] = value
+            data.append(question_data)
+
+        # Now data is a list of dictionaries, each containing the question and answers for a question
         i = 1
-        while i - 1 < Surveyer.objects.get(user=request.user.id).questions:
+        for question_set in data:
 
-            # for cases where there is no question to be updated, add a new question entry
+            question_text = question_set["question"]
+            if not question_text:
+                continue
 
-            if not Question.objects.filter(asker=request.user.id, number=i):
-                # if they're adding a new question to the existing survey
-                q = Question(
-                    asker=request.user, number=i, question=request.POST["q%i" % i]
-                )
-                q.save()
-            else:
-                # if there already exists a question numbered the same
-                q = Question.objects.get(asker=request.user.id, number=i)
-                q.question = request.POST["q%i" % i]
-                q.save()
+            question_obj, _ = Question.objects.get_or_create(
+                asker=request.user,
+                number=i,
+            )
+            question_obj.question = question_text
 
             # record all the answers and save them
-            a = Question.objects.get(asker=request.user.id, number=i)
-            a.ans1 = request.POST["q" + str(i) + "a" + str(1)]
-            a.ans2 = request.POST["q" + str(i) + "a" + str(2)]
-            a.ans3 = request.POST["q" + str(i) + "a" + str(3)]
-            a.ans4 = request.POST["q" + str(i) + "a" + str(4)]
-            a.ans5 = request.POST["q" + str(i) + "a" + str(5)]
-            a.ans6 = request.POST["q" + str(i) + "a" + str(6)]
-            a.save()
-
-            # reset no answers each time
-            noanswers = 0
-
-            # record how many answers the question has
-            if a.ans6 == "":
-                if a.ans5 == "":
-                    if a.ans4 == "":
-                        if a.ans3 == "":
-                            noanswers = 2
-                        else:
-                            noanswers = 3
-                    else:
-                        noanswers = 4
-                else:
-                    noanswers = 5
-            else:
-                noanswers = 6
+            answers = [
+                question_set[f"ans{j}"] for j in range(1, 7) if question_set[f"ans{j}"]
+            ]
+            for j in range(len(answers)):
+                setattr(question_obj, f"ans{j+1}", answers[j] or None)
 
             # saving the number of answers
-            t = Question.objects.get(asker=request.user.id, number=i)
-            t.type = noanswers
-            t.save()
+            question_obj.type = len(answers)
+            question_obj.save()
 
-            # move to the next question
             i += 1
 
         # set the number of questions the user has in their survey
         s = Surveyer.objects.get(user=request.user.id)
-        s.questions = i - 1
+        s.questions = number_of_questions
         s.save()
         return alert(request, "Questions saved.", "You can now share your survey.")
 
@@ -256,10 +249,10 @@ def editor(request):
 
         existing_questions = Question.objects.filter(asker=request.user.id).count()
 
-        # update the number of questions for the user.
-        s = Surveyer.objects.get(user=request.user.id)
-        s.questions = noquestions
-        s.save()
+        # # update the number of questions for the user.
+        # s = Surveyer.objects.get(user=request.user.id)
+        # s.questions = noquestions
+        # s.save()
 
         return render(
             request,
@@ -288,9 +281,7 @@ def results(request):
 
     # write the results to a csv file.
     with open(
-        "/home/QuestioNet/surveyhub/survey/static/results"
-        + str(request.user.id)
-        + ".csv",
+        f"survey/static/results/results{request.user.id}.csv",
         "w",
     ) as csvfile:
 
@@ -301,17 +292,15 @@ def results(request):
         writer.writerow(["user number", "question number", "question", "answer"])
 
         # write each row of data
-        i = 0
         for row in results:
             writer.writerow(
                 [
-                    results[i].user,
-                    results[i].number,
-                    results[i].question,
-                    results[i].answer,
+                    row.user,
+                    row.number,
+                    row.question,
+                    row.answer,
                 ]
             )
-            i += 1
 
     surveyed = Result.objects.filter(asker=request.user.id).last().user
 
@@ -342,50 +331,23 @@ def results(request):
             asker=request.user.id, number=number, answer=questions[i].ans6
         ).count()
 
-        # Update the analysis table
-        if not Analysis.objects.filter(asker=request.user.id, number=number):
-            a = Analysis(
-                asker=request.user,
-                userstot=surveyed,
-                number=number,
-                question=questions[i].question,
-                ans1count=ans1count,
-                ans2count=ans2count,
-                ans3count=ans3count,
-                ans4count=ans4count,
-                ans5count=ans5count,
-                ans6count=ans6count,
-                ans1=questions[i].ans1,
-                ans2=questions[i].ans2,
-                ans3=questions[i].ans3,
-                ans4=questions[i].ans4,
-                ans5=questions[i].ans5,
-                ans6=questions[i].ans6,
-            )
-            a.save()
-
-        # if there are previous entries, overwrite them
-        else:
-            Analysis.objects.filter(asker=request.user.id, number=number).delete()
-            a = Analysis(
-                asker=request.user,
-                userstot=surveyed,
-                number=number,
-                question=questions[i].question,
-                ans1count=ans1count,
-                ans2count=ans2count,
-                ans3count=ans3count,
-                ans4count=ans4count,
-                ans5count=ans5count,
-                ans6count=ans6count,
-                ans1=questions[i].ans1,
-                ans2=questions[i].ans2,
-                ans3=questions[i].ans3,
-                ans4=questions[i].ans4,
-                ans5=questions[i].ans5,
-                ans6=questions[i].ans6,
-            )
-            a.save()
+        analysis, _ = Analysis.objects.get_or_create(asker=request.user, number=number)
+        analysis.userstot = surveyed
+        analysis.number = number
+        analysis.question = questions[i].question
+        analysis.ans1count = ans1count
+        analysis.ans2count = ans2count
+        analysis.ans3count = ans3count
+        analysis.ans4count = ans4count
+        analysis.ans5count = ans5count
+        analysis.ans6count = ans6count
+        analysis.ans1 = questions[i].ans1
+        analysis.ans2 = questions[i].ans2
+        analysis.ans3 = questions[i].ans3
+        analysis.ans4 = questions[i].ans4
+        analysis.ans5 = questions[i].ans5
+        analysis.ans6 = questions[i].ans6
+        analysis.save()
 
     analysis = Analysis.objects.filter(asker=request.user.id)
 

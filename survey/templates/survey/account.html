@@ -1,5 +1,7 @@
-{% extends "survey/layout.html" %} {% block head %} Account {% endblock %} {%
-block body %} {% load static %}
+{% extends "survey/layout.html" %} 
+{% load static %} // Add this line to import the 'static' template tag library
+{% block head %} Account {% endblock %} 
+{% block body %} 
 <script src="{% static 'survey/loginCheck.js' %}"></script>
 <div id="message-section">
   <h1>Account</h1>

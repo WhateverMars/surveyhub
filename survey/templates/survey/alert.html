@@ -1,39 +1,43 @@
-{% extends "survey/layout.html" %} {% block head %} QuestioNet {% endblock %} {%
-block body %}
-<div id="message-section">
-  <h1 class="message" id="message">{{ message }}</h1>
-  <p class="message" id="message2">{{ message2 }}</p>
-</div>
+{% extends "survey/layout.html" %} 
+{% block head %} 
+  QuestioNet 
+{% endblock %} 
 
-{% if user.is_authenticated %}
-<div id="account-section">
-  {% if questions %}
-  <form class="form" action="/editor" method="get">
-    <button class="btn btn-primary" type="submit">Edit survey</button>
-  </form>
-  {% else %}
-  <form class="form" action="/editor" method="get">
-    <button class="btn btn-primary" type="submit">Create survey</button>
-  </form>
-  {% endif %}
-  <form class="form" action="/logout" method="get">
-    <button class="btn btn-primary" type="submit">Log out</button>
-  </form>
-  <div>
-    <p>Use the below link to share your survey:</p>
-    <!--If hosting on pythonanywhere-->
-    <p>
-      <a
-        href="http://questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}"
-        >http://questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}</a
-      >
-    </p>
-    <!--otherwise uncomment below-->
-    <!--<p><a href="http://127.0.0.1:8000/?id={{request.user.surveyer.link}}">http://127.0.0.1:8000/?id={{request.user.surveyer.link}}</a></p>-->
+{% block body %}
+  <div id="message-section">
+    <h1 class="message" id="message">{{ message }}</h1>
+    <p class="message" id="message2">{{ message2 }}</p>
   </div>
 
-  <form class="form" action="/results">
-    <button class="btn btn-primary" type="submit">Results</button>
-  </form>
-</div>
-{% endif %} {% endblock %}
+  {% if user.is_authenticated %}
+    <div id="account-section">
+      {% if questions %}
+        <form class="form" action="/editor" method="get">
+          <button class="btn btn-primary" type="submit">Edit survey</button>
+        </form>
+      {% else %}
+        <form class="form" action="/editor" method="get">
+          <button class="btn btn-primary" type="submit">Create survey</button>
+        </form>
+      {% endif %}
+      <form class="form" action="/logout" method="get">
+        <button class="btn btn-primary" type="submit">Log out</button>
+      </form>
+      <div>
+        <p>Use the below link to share your survey:</p>
+        <!--If hosting on pythonanywhere-->
+        <p>
+          <a href="http://questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}">
+            http://questionet.pythonanywhere.com/?id={{request.user.surveyer.link}}
+          </a>
+        </p>
+        <!--otherwise uncomment below-->
+        <!--<p><a href="http://127.0.0.1:8000/?id={{request.user.surveyer.link}}">http://127.0.0.1:8000/?id={{request.user.surveyer.link}}</a></p>-->
+      </div>
+
+      <form class="form" action="/results">
+        <button class="btn btn-primary" type="submit">Results</button>
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}

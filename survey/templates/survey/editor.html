@@ -1,5 +1,9 @@
-{% extends "survey/layout.html" %} {% block head %} Editor {% endblock %} {%
-block body %}
+{% extends "survey/layout.html" %}
+{% block head %}
+Editor
+{% endblock %}
+
+{%block body %}
 <h2>Here you can set your survey.</h2>
 <form class="form" action="/editor" method="get">
   <div class="labeled">
@@ -13,18 +17,11 @@ block body %}
       type="number"
       name="noquestions"
       min="1"
-      {%
-      if
-      users_no_questions
-      %}
+      {% if users_no_questions %}
       value="{{users_no_questions}}"
-      {%
-      else
-      %}
+      {% else %}
       value="1"
-      {%
-      endif
-      %}
+      {% endif %}
     />
   </div>
   <input
@@ -79,12 +76,8 @@ block body %}
           name="q{{row.number}}a3"
           placeholder="Answer 3(optional)"
           type="text"
-          {%
-          if
-          row.ans3
-          and
-          row.type
-        />= 3 %} value="{{row.ans3}}" {% endif %}>
+          {% if row.ans3 and row.type >= 3 %} value="{{row.ans3}}" {% endif %}
+        />
       </div>
       <div class="answer-container">
         <input
@@ -94,12 +87,8 @@ block body %}
           name="q{{row.number}}a4"
           placeholder="Answer 4(optional)"
           type="text"
-          {%
-          if
-          row.ans4
-          and
-          row.type
-        />= 4 %} value="{{row.ans4}}" {% endif %}>
+          {% if row.ans4 and row.type >= 4 %} value="{{row.ans4}}" {% endif %}
+        />
         <input
           autocomplete="off"
           autofocus
@@ -107,12 +96,8 @@ block body %}
           name="q{{row.number}}a5"
           placeholder="Answer 5(optional)"
           type="text"
-          {%
-          if
-          row.ans5
-          and
-          row.type
-        />= 5 %} value="{{row.ans5}}" {% endif %}>
+          {% if row.ans5 and row.type >= 5 %} value="{{row.ans5}}" {% endif %}
+        />
         <input
           autocomplete="off"
           autofocus
@@ -120,12 +105,8 @@ block body %}
           name="q{{row.number}}a6"
           placeholder="Answer 6(optional)"
           type="text"
-          {%
-          if
-          row.ans6
-          and
-          row.type
-        />= 6 %} value="{{row.ans6}}" {% endif %}>
+          {% if row.ans6 and row.type >= 6 %} value="{{row.ans6}}" {% endif %}
+        />
       </div>
     </div>
 

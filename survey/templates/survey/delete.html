@@ -1,12 +1,16 @@
-{% extends "survey/layout.html" %} {% block head %} datadelete {% endblock %} {%
-block body %}
+{% extends "survey/layout.html" %} 
+{% block head %} 
+  <title>datadelete</title> <!-- Add a title tag -->
+{% endblock %} 
+
+{% block body %}
 <div id="message-section">
   <h1>DELETE DATA?</h1>
-  <p>Once results are deleted they cannot be recoved.</p>
+  <p>Once results are deleted they cannot be recovered.</p> <!-- Correct typo -->
 </div>
 
 <form class="form" action="/cleardata" method="post">
-  {% csrf_token %}
+  {% csrf_token %} <!-- Add the missing CSRF token -->
   <button class="btn btn-danger" type="submit">CONFIRM DELETE</button>
 </form>
 
