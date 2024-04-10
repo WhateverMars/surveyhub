@@ -1,15 +1,16 @@
 from django.urls import path
 from django.contrib import admin
 
-from . import views
+from . import old_views
+from survey.views import EditorView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.index, name="index"),
-    path("account", views.account, name="account"),
-    path("register", views.register, name="register"),
-    path("logout", views.logout_view, name="logout"),
-    path("editor", views.editor, name="editor"),
-    path("results", views.results, name="results"),
-    path("cleardata", views.cleardata, name="cleardata"),
+    path("", old_views.index, name="index"),
+    path("account", old_views.account, name="account"),
+    path("register", old_views.register, name="register"),
+    path("logout", old_views.logout_view, name="logout"),
+    path("editor", EditorView.as_view(), name="editor"),
+    path("results", old_views.results, name="results"),
+    path("cleardata", old_views.cleardata, name="cleardata"),
 ]

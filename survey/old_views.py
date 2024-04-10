@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from survey.models import Surveyer, User, Question, Result, Analysis
-from survey.util import random_string
+from survey.utils import random_string, alert
 
 
 def index(request):
@@ -304,52 +304,64 @@ def results(request):
 
     surveyed = Result.objects.filter(asker=request.user.id).last().user
 
-    noquestions = Surveyer.objects.get(user=request.user.id).questions
+    number_of_questions = Surveyer.objects.get(user=request.user.id).questions
 
     questions = Question.objects.filter(asker=request.user.id)
-
+    number = 1
     # summerise results
-    for i in range(noquestions):
-        number = i + 1
+    for question in questions[:number_of_questions]:
         # count the number of votes for each answer for this question
         ans1count = Result.objects.filter(
-            asker=request.user.id, number=number, answer=questions[i].ans1
+            asker=request.user.id, number=number, answer=question.ans1
         ).count()
         ans2count = Result.objects.filter(
-            asker=request.user.id, number=number, answer=questions[i].ans2
+            asker=request.user.id, number=number, answer=question.ans2
         ).count()
         ans3count = Result.objects.filter(
-            asker=request.user.id, number=number, answer=questions[i].ans3
+            asker=request.user.id, number=number, answer=question.ans3
         ).count()
         ans4count = Result.objects.filter(
-            asker=request.user.id, number=number, answer=questions[i].ans4
+            asker=request.user.id, number=number, answer=question.ans4
         ).count()
         ans5count = Result.objects.filter(
-            asker=request.user.id, number=number, answer=questions[i].ans5
+            asker=request.user.id, number=number, answer=question.ans5
         ).count()
         ans6count = Result.objects.filter(
-            asker=request.user.id, number=number, answer=questions[i].ans6
+            asker=request.user.id, number=number, answer=question.ans6
         ).count()
 
-        analysis, _ = Analysis.objects.get_or_create(asker=request.user, number=number)
+        analysis, _ = Analysis.objects.get_or_create(
+            asker=request.user, number=number,
+            defaults={
+                'ans1count': ans1count,
+                'ans2count': ans2count,
+                'ans3count': ans3count,
+                'ans4count': ans4count,
+                'ans5count': ans5count,
+                'ans6count': ans6count,
+                "userstot": surveyed,
+            }
+        )
         analysis.userstot = surveyed
         analysis.number = number
-        analysis.question = questions[i].question
+        analysis.question = question.question
         analysis.ans1count = ans1count
         analysis.ans2count = ans2count
         analysis.ans3count = ans3count
         analysis.ans4count = ans4count
         analysis.ans5count = ans5count
         analysis.ans6count = ans6count
-        analysis.ans1 = questions[i].ans1
-        analysis.ans2 = questions[i].ans2
-        analysis.ans3 = questions[i].ans3
-        analysis.ans4 = questions[i].ans4
-        analysis.ans5 = questions[i].ans5
-        analysis.ans6 = questions[i].ans6
+        analysis.ans1 = question.ans1
+        analysis.ans2 = question.ans2
+        analysis.ans3 = question.ans3
+        analysis.ans4 = question.ans4
+        analysis.ans5 = question.ans5
+        analysis.ans6 = question.ans6
         analysis.save()
 
-    analysis = Analysis.objects.filter(asker=request.user.id)
+        number += 1
+
+    analysis = Analysis.objects.filter(asker=request.user.id)[:number_of_questions]
 
     # return both the results and the analysis table.
     return render(
@@ -370,21 +382,3 @@ def cleardata(request):
         return alert(request, "Data Deleted", "")
 
     return render(request, "survey/delete.html")
-
-
-# this page is flexable to display messages as required
-def alert(request, message, message2):
-
-    # checks if the user is logged in
-    if request.user.id:
-        # this simply checks if the user has created a survey already
-        questions = Question.objects.filter(asker=request.user)
-        return render(
-            request,
-            "survey/alert.html",
-            {"message": message, "message2": message2, "questions": questions},
-        )
-
-    return render(
-        request, "survey/alert.html", {"message": message, "message2": message2}
-    )
